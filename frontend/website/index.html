@@ -58,7 +58,7 @@
             </div>
 
             <div class="modal-body">
-            <form action="" onclick="$('#login_box').modal('hide');" method="GET" id="login_form" enctype="multipart/form-data" class="was-validated">
+            <form action="" method="GET" id="login_form" enctype="multipart/form-data" class="was-validated">
                 <div class="form-group">
                     <label for="username" >Username: </label>
                     <input name="username" id ="username" type="text" class="form-control" required>
@@ -71,7 +71,7 @@
                 </div>
                 <!-- Can't get this button to go to the right at the moment-->
                 <div class = "form-group pull-right">
-                    <input type="submit" class="btn btn-primary pull-right" value="Log in">
+                    <input type="submit" onclick="$('#login_box').modal('hide');" class="btn btn-primary pull-right" value="Log in">
                 </div>
             </form>
             </div>
