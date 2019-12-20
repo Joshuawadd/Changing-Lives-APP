@@ -5,11 +5,16 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!--Bootstrap scripts-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <!-- Links to local files-->
     <link rel = "stylesheet" href="style.css">
     <script src="script.js" ></script>
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png">
 </head>
 <body>
     <!-- Header -->
@@ -43,6 +48,36 @@
     <!-- Couldn't get the collapsing menu to work properly so it is ommitted for now
     need to decide whether to even link the page to other CL pages-->
     <br />
+    <!-- Login modal -->
+    <div class="modal hide fade in" id="login_box" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+            <div class="modal-content">
+
+            <div class="modal-header">
+                <h3 class="modal-title">Log in</h3>
+            </div>
+
+            <div class="modal-body">
+            <form action="" onclick="$('#login_box').modal('hide');" method="GET" id="login_form" enctype="multipart/form-data" class="was-validated">
+                <div class="form-group">
+                    <label for="username" >Username: </label>
+                    <input name="username" id ="username" type="text" class="form-control" required>
+                    <div class="invalid-feedback">Please fill out this field.</div>
+                </div>
+                <div class="form-group">
+                        <label for="password" >Password: </label>
+                        <input name="password" id ="password" type="password" class="form-control" required>
+                        <div class="invalid-feedback">Please fill out this field.</div>
+                </div>
+                <!-- Can't get this button to go to the right at the moment-->
+                <div class = "form-group pull-right">
+                    <input type="submit" class="btn btn-primary pull-right" value="Log in">
+                </div>
+            </form>
+            </div>
+            </div>
+        </div>
+    </div>
     <h1>Welcome to the <span class="highlight">Changing Lives</span> App Manager Site!</h1>
     <p>From here you can create and manage users and edit the app content</p>
   </body>
