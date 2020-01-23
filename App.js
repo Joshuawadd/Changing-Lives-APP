@@ -3,6 +3,8 @@ import { StyleSheet, Text, View, FlatList, ActivityIndicator, Button } from 'rea
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 //import {ToastAndroid} from 'react-native';
+//import { API_BASEROUTE, TEST_STRING } from 'react-native-dotenv'
+import { API_BASEROUTE } from 'react-native-dotenv'
 
 const styles = StyleSheet.create({
   container: {
@@ -12,9 +14,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
-
-//const api_baseroute = 'http://192.168.1.66:8090'
-const api_baseroute = 'http://facebook.github.io/react-native/'
 
 
 function genericGet(url) {
@@ -30,19 +29,13 @@ function genericGet(url) {
 
 
 class LoginScreen extends React.Component {
-  //Toast.show('This is a toast.');
-  //Toast.show('This is a long toast.', Toast.LONG);
   render() {
-    //ToastAndroid.show('testttt', ToastAndroid.SHORT)
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <Text>User Login</Text>
         <Button
           title="Login"
-          //onPress={() => this.props.navigation.navigate('MainMenu')}
           onPress={() => {
-            //alert('You tapped the button!'+ 4);
-            //ToastAndroid.show('Test Toast', ToastAndroid.SHORT)
             this.props.navigation.navigate('MainMenu')
           }}
         />
@@ -75,7 +68,18 @@ class MainMenuScreen extends React.Component {
   }
 }
 
+const UserButton = () => (
+  <div className="container padded">
+      <div className="row">
+          <div className="col-6 offset-md-3">
+              /*...Add your remaining JSX....*/
+          </div>
+      </div>
+  </div>
+)
 
+
+var resourceSectionArr = [ 'Section 10', 'Section 20', 'Section 30'];
 class ResourceMenuScreen extends React.Component {
 
   constructor(props){
@@ -84,15 +88,28 @@ class ResourceMenuScreen extends React.Component {
   }
 
   componentDidMount(){
-      //api_subroute = '/list'
-      api_subroute = '/movies.json'
-      genericGet(api_baseroute + api_subroute).then((responseJson) => {
+      var api_subroute = "/api/sections"
+        genericGet(API_BASEROUTE + api_subroute).then((responseJson) => {
         this.setState({
           isLoading: false,
           dataSource: responseJson,
-        }/*, function(){}*/);
+        }, function(){});
+        
       })
   }
+
+  renderButtons() {
+    return this.state.dataSource.map((item) => {
+        return (
+            <Button 
+              title = {item.name}
+                //style={{ borderColor: item.color }}
+                //onPress={this.onPress}
+            />
+
+        );
+    });
+}
 
   render(){
 
@@ -105,22 +122,18 @@ class ResourceMenuScreen extends React.Component {
     }
 
     return(
-      <View style={{flex: 1, paddingTop:20}}>
-        <Text>{JSON.stringify(this.state.dataSource)}</Text>
-        {/*
-        <FlatList
-          data={this.state.dataSource}
-          renderItem={({item}) => <Text>{item.title}, {item.releaseYear}</Text>}
-          keyExtractor={({id}, index) => id}
-        />
-        */}
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <Text>Resources - Sections</Text>
+      {
+        this.renderButtons()
+      }
       </View>
     );
   }
 }
 
+
 //GET LIST OF SECTIONS, THEN ADD THOSE SECTIONS TO THE PAGE
-//GET LIST OF
 
 class ForumMenuScreen extends React.Component {
   render() {
@@ -156,7 +169,7 @@ const AppNavigator = createStackNavigator(
     Settings: SettingsScreen,
   },
   {
-    initialRouteName: 'MainMenu'
+    initialRouteName: 'Login'
   }
 );
 
