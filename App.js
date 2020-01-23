@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, FlatList, ActivityIndicator, Button } from 'react-native';
-import { createAppContainer } from 'react-navigation';
+import { createAppContainer, NavigationActions  } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 //import {ToastAndroid} from 'react-native';
 //import { API_BASEROUTE, TEST_STRING } from 'react-native-dotenv'
@@ -79,7 +79,6 @@ const UserButton = () => (
 )
 
 
-var resourceSectionArr = [ 'Section 10', 'Section 20', 'Section 30'];
 class ResourceMenuScreen extends React.Component {
 
   constructor(props){
@@ -103,8 +102,9 @@ class ResourceMenuScreen extends React.Component {
         return (
             <Button 
               title = {item.name}
-                //style={{ borderColor: item.color }}
-                //onPress={this.onPress}
+              onPress={ () => {
+                this.props.navigation.navigate('Section', item)
+              }}
             />
 
         );
@@ -133,7 +133,19 @@ class ResourceMenuScreen extends React.Component {
 }
 
 
-//GET LIST OF SECTIONS, THEN ADD THOSE SECTIONS TO THE PAGE
+class SectionScreen extends React.Component {
+  render() {
+    const sectionInfo = this.props.navigation.state.params
+    return (
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <Text>{sectionInfo.name}</Text>
+        <Text>{sectionInfo.text}</Text>
+        <Text>{JSON.stringify(sectionInfo)}</Text>
+      </View>
+    );
+  }
+}
+
 
 class ForumMenuScreen extends React.Component {
   render() {
@@ -161,8 +173,7 @@ const AppNavigator = createStackNavigator(
     Login: LoginScreen,
     MainMenu: MainMenuScreen,
     ResourceMenu: ResourceMenuScreen,
-    // sections - one expandible/collapsible section on ResourceMenu for each?
-    // individual resource screens - must be dynamically created somehow
+    Section: SectionScreen,
     ForumMenu: ForumMenuScreen,
     // ForumMenu will contain a list of topics 
     // each topic will have its own screen (again, dynamically created), consisting of the submitted posts and the post submission form
