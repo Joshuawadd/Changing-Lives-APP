@@ -1,8 +1,8 @@
 import React from 'react';
-import { StyleSheet, Text, View, FlatList, ActivityIndicator, Button } from 'react-native';
-import { createAppContainer } from 'react-navigation';
+import { StyleSheet, Text, View, TextInput, ActivityIndicator, Button } from 'react-native';
+import { createAppContainer  } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
-//import {ToastAndroid} from 'react-native';
+import { API_BASEROUTE } from 'react-native-dotenv'
 
 const styles = StyleSheet.create({
   container: {
@@ -12,9 +12,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
-
-//const api_baseroute = 'http://192.168.1.66:8090'
-const api_baseroute = 'http://facebook.github.io/react-native/'
 
 
 function genericGet(url) {
@@ -28,22 +25,60 @@ function genericGet(url) {
     });
 }
 
-
 class LoginScreen extends React.Component {
-  //Toast.show('This is a toast.');
-  //Toast.show('This is a long toast.', Toast.LONG);
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      username: 'abcd12',
+      password: '123456'
+    };
+    global.authToken = ''
+  }
+
+  static navigationOptions = {
+    title: 'User Login',
+  };
+
   render() {
-    //ToastAndroid.show('testttt', ToastAndroid.SHORT)
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>User Login</Text>
+        <TextInput
+        style = {{height:40}}
+        placeholder = "Username"
+        onChangeText={(username)=>this.setState({username})}
+        value={this.state.username}
+        />
+        <TextInput
+        style = {{height:40}}
+        secureTextEntry={true}
+        placeholder = "Password"
+        onChangeText={(password)=>this.setState({password})}
+        value={this.state.password}
+        />
         <Button
           title="Login"
-          //onPress={() => this.props.navigation.navigate('MainMenu')}
-          onPress={() => {
-            //alert('You tapped the button!'+ 4);
-            //ToastAndroid.show('Test Toast', ToastAndroid.SHORT)
-            this.props.navigation.navigate('MainMenu')
+          onPress={async () => {
+            const api_subroute = "/api/login"
+            try{
+              let uname = this.state.username;
+              let pass = this.state.password;
+              let response = await fetch(API_BASEROUTE + api_subroute, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'username=' + uname + '&password=' + pass
+              });
+              if (response.ok) {
+                global.authToken = await response.text();
+                this.props.navigation.navigate('MainMenu');
+              } else {
+                  throw new Error(response.status + " (" + await response.text()+ ")");
+              }
+            }  catch(error) {
+              alert(error)
+          }
           }}
         />
       </View>
@@ -52,12 +87,23 @@ class LoginScreen extends React.Component {
 }
 
 class MainMenuScreen extends React.Component {
+  constructor(props){
+    super(props);
+    //alert(this.authToken)
+    //this.authToken = this.props.navigation.state.params.authToken
+    //alert(this.props.navigation.state.params)
+    //this.state = { isLoading: true }
+  }
+
+  static navigationOptions = {
+    title: 'Main Menu',
+  };
+
   render() {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         
-        <Text>Main Menu</Text>
-
+        
         <Button
           title="Resources"
           onPress={() => this.props.navigation.navigate('ResourceMenu')}
@@ -75,23 +121,41 @@ class MainMenuScreen extends React.Component {
   }
 }
 
-
 class ResourceMenuScreen extends React.Component {
 
   constructor(props){
     super(props);
-    this.state ={ isLoading: true}
+    this.state = { isLoading: true }
   }
 
+  static navigationOptions = {
+    title: 'Resources',
+  };
+  
+
   componentDidMount(){
-      //api_subroute = '/list'
-      api_subroute = '/movies.json'
-      genericGet(api_baseroute + api_subroute).then((responseJson) => {
+      var api_subroute = "/api/sections?token="+global.authToken
+      genericGet(API_BASEROUTE + api_subroute).then((responseJson) => {
         this.setState({
           isLoading: false,
           dataSource: responseJson,
-        }/*, function(){}*/);
+        }, function(){});
+        
       })
+  }
+
+  renderButtons() {
+    return this.state.dataSource.map((item) => {
+        return (
+            <Button 
+              title = {item.name}
+              onPress={ () => {
+                this.props.navigation.navigate('Section', item)
+              }}
+            />
+
+        );
+    });
   }
 
   render(){
@@ -105,39 +169,74 @@ class ResourceMenuScreen extends React.Component {
     }
 
     return(
-      <View style={{flex: 1, paddingTop:20}}>
-        <Text>{JSON.stringify(this.state.dataSource)}</Text>
-        {/*
-        <FlatList
-          data={this.state.dataSource}
-          renderItem={({item}) => <Text>{item.title}, {item.releaseYear}</Text>}
-          keyExtractor={({id}, index) => id}
-        />
-        */}
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      {
+        this.renderButtons()
+      }
       </View>
     );
   }
 }
 
-//GET LIST OF SECTIONS, THEN ADD THOSE SECTIONS TO THE PAGE
-//GET LIST OF
+
+class SectionScreen extends React.Component {
+
+  constructor(props){
+    super(props);
+    this.sectionInfo = this.props.navigation.state.params;
+  }
+
+
+  static navigationOptions = ({navigation}) => ({
+    title: `${navigation.state.params.name}`,
+  });
+
+  render() {
+    
+    return (
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <Text>{this.sectionInfo.text}</Text>
+        <Text>{JSON.stringify(this.sectionInfo)}</Text>
+      </View>
+    );
+  }
+}
+
 
 class ForumMenuScreen extends React.Component {
+  static navigationOptions = {
+    title: 'Forum',
+  };
   render() {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>Forum</Text>
-        <Text>Topic List</Text>
+        <Text>Topic List Here</Text>
+      </View>
+    );
+  }
+}
+
+class TopicScreen extends React.Component {
+  static navigationOptions = {
+    title: 'Topic',
+  };
+  render() {
+    return (
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <Text>Original post and child comments will be displayed here</Text>
       </View>
     );
   }
 }
 
 class SettingsScreen extends React.Component {
+  static navigationOptions = {
+    title: 'Settings',
+  };
   render() {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>Settings</Text>
+        <Text>Settings Here</Text>
       </View>
     );
   }
@@ -148,15 +247,13 @@ const AppNavigator = createStackNavigator(
     Login: LoginScreen,
     MainMenu: MainMenuScreen,
     ResourceMenu: ResourceMenuScreen,
-    // sections - one expandible/collapsible section on ResourceMenu for each?
-    // individual resource screens - must be dynamically created somehow
+    Section: SectionScreen,
     ForumMenu: ForumMenuScreen,
-    // ForumMenu will contain a list of topics 
-    // each topic will have its own screen (again, dynamically created), consisting of the submitted posts and the post submission form
+    Topic: TopicScreen,
     Settings: SettingsScreen,
   },
   {
-    initialRouteName: 'MainMenu'
+    initialRouteName: 'Login'
   }
 );
 
