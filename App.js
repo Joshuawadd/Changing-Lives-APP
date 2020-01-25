@@ -90,10 +90,6 @@ class LoginScreen extends React.Component {
 class MainMenuScreen extends React.Component {
   constructor(props){
     super(props);
-    //alert(this.authToken)
-    //this.authToken = this.props.navigation.state.params.authToken
-    //alert(this.props.navigation.state.params)
-    //this.state = { isLoading: true }
   }
 
   static navigationOptions = {
@@ -191,7 +187,9 @@ class SectionScreen extends React.Component {
   render() {
     
     return (
-      <FlatList
+      <View>
+        <Text> {this.sectionInfo.text} </Text>
+        <FlatList
           style={{flex:1, margin: 10}}
           data={this.sectionInfo.files}
           renderItem={({item}) => (
@@ -204,6 +202,7 @@ class SectionScreen extends React.Component {
           )}
           keyExtractor={(item, index) => index.toString()}
           />
+        </View>
       );
   }
 }
