@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, ActivityIndicator, Button, FlatList, TouchableHighlight } from 'react-native';
+import { StyleSheet, Text, View, TextInput, ActivityIndicator, Button, FlatList } from 'react-native';
 import { createAppContainer  } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { API_BASEROUTE } from 'react-native-dotenv'
@@ -145,22 +145,6 @@ class ResourceMenuScreen extends React.Component {
       })
   }
 
-  renderButtons() {
-    return this.state.dataSource.map((item) => {
-      console.log(item)
-        return (
-            <Button 
-              title = {item.name}
-              key = {"button_section_" + item.id}
-              onPress={ () => {
-                this.props.navigation.navigate('Section', item)
-              }}
-            />
-
-        );
-    });
-  }
-
   render(){
 
     if(this.state.isLoading){
@@ -172,11 +156,21 @@ class ResourceMenuScreen extends React.Component {
     }
 
     return(
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      {
-        this.renderButtons()
-      }
-      </View>
+       <FlatList
+          style={{flex:1, margin: 10}}
+          data={this.state.dataSource}
+          renderItem={({item}) => (
+            <View style = {{margin: 10}}>
+            <Button
+              title = {item.name}
+              key = {"button_section_" + item.id}
+              onPress={ () => {
+                this.props.navigation.navigate('Section', item)
+              }}
+            />
+            </View>
+          )}
+          />
     );
   }
 }
@@ -197,25 +191,20 @@ class SectionScreen extends React.Component {
   render() {
     
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>{this.sectionInfo.text}</Text>
-
-        <FlatList
-          data={this.sectionInfo.files}//{[['Title Text', 'item1'], ['Title Text2', 'item2']]}
-          renderItem={({item, index, separators}) => (
-            <TouchableHighlight
+      <FlatList
+          style={{flex:1, margin: 10}}
+          data={this.sectionInfo.files}
+          renderItem={({item}) => (
+            <View style = {{margin: 10}}>
+            <Button
+              title = {item[0]}
               onPress={() => Linking.openURL(API_BASEROUTE+"/files/"+item[1]+"?token="+global.authToken)}
-              onShowUnderlay={separators.highlight}
-              onHideUnderlay={separators.unhighlight}>
-              <View style={{backgroundColor: 'white'}}>
-                <Text>{item[0]}</Text>
-              </View>
-            </TouchableHighlight>
+            />
+            </View>
           )}
+          keyExtractor={(item, index) => index.toString()}
           />
-        <Text>{JSON.stringify(this.sectionInfo)}</Text>
-      </View>
-    );
+      );
   }
 }
 
