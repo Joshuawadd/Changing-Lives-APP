@@ -1,8 +1,9 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, ActivityIndicator, Button } from 'react-native';
+import { StyleSheet, Text, View, TextInput, ActivityIndicator, Button, FlatList, TouchableHighlight } from 'react-native';
 import { createAppContainer  } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { API_BASEROUTE } from 'react-native-dotenv'
+import { Linking } from 'expo';
 
 const styles = StyleSheet.create({
   container: {
@@ -134,7 +135,7 @@ class ResourceMenuScreen extends React.Component {
   
 
   componentDidMount(){
-      var api_subroute = "/api/sections?token="+global.authToken
+      var api_subroute = "/api/section/list?token="+global.authToken
       genericGet(API_BASEROUTE + api_subroute).then((responseJson) => {
         this.setState({
           isLoading: false,
@@ -146,9 +147,11 @@ class ResourceMenuScreen extends React.Component {
 
   renderButtons() {
     return this.state.dataSource.map((item) => {
+      console.log(item)
         return (
             <Button 
               title = {item.name}
+              key = {"button_section_" + item.id}
               onPress={ () => {
                 this.props.navigation.navigate('Section', item)
               }}
@@ -196,6 +199,20 @@ class SectionScreen extends React.Component {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <Text>{this.sectionInfo.text}</Text>
+
+        <FlatList
+          data={this.sectionInfo.files}//{[['Title Text', 'item1'], ['Title Text2', 'item2']]}
+          renderItem={({item, index, separators}) => (
+            <TouchableHighlight
+              onPress={() => Linking.openURL(API_BASEROUTE+"/files/"+item[1]+"?token="+global.authToken)}
+              onShowUnderlay={separators.highlight}
+              onHideUnderlay={separators.unhighlight}>
+              <View style={{backgroundColor: 'white'}}>
+                <Text>{item[0]}</Text>
+              </View>
+            </TouchableHighlight>
+          )}
+          />
         <Text>{JSON.stringify(this.sectionInfo)}</Text>
       </View>
     );
