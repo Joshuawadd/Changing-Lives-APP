@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
   button: {
     //alignItems: 'center',
     backgroundColor: '#DDDDDD',
-    padding: 10,
+    padding: '5%',
     backgroundColor: '#253D98',
     alignItems: "center",
     borderRadius: 50
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
   },
 
   inputtext: {
-    padding: 10,
+    padding: '5%',
     color: '#000',
     fontSize: 20,
     //backgroundColor: '#DEDEDE',
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
   },
 
   infotext: {
-    padding: 10,
+    padding: '5%',
     color: '#000',
     fontSize: 20,
     //backgroundColor: '#DEDEDE',
@@ -83,8 +83,8 @@ class LoginScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: 'abcd12',
-      password: '123456'
+      username: '',
+      password: ''
     };
     global.authToken = ''
   }
@@ -162,9 +162,7 @@ class MainMenuScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.container}>
           <Image source={require('./assets/logo.png')} style={styles.image} />
-        </View>
         <View style={styles.buttoncontainer}>
           <TouchableOpacity
             onPress={() => this.props.navigation.navigate('ResourceMenu')}
@@ -233,13 +231,13 @@ class ResourceMenuScreen extends React.Component {
               onPress={ () => {
                 this.props.navigation.navigate('Section', item)
                 }}
-              key = {"button_section_" + String(item.id)}
               style={styles.button}
           >
             <Text style={styles.buttontext}>{item.name}</Text>
             </TouchableOpacity>
             </View>
           )}
+          keyExtractor={(item, index) => item.id.toString()}
           />
     );
   }
