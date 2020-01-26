@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
   button: {
     //alignItems: 'center',
     backgroundColor: '#DDDDDD',
-    padding: 30,
+    padding: 10,
     backgroundColor: '#253D98',
     alignItems: "center",
     borderRadius: 50
@@ -43,16 +43,26 @@ const styles = StyleSheet.create({
     width: '80%',
     flex: 2,
     justifyContent: 'space-evenly',
+    
   },
 
   inputtext: {
+    padding: 10,
     color: '#000',
-    fontSize: 30,
+    fontSize: 20,
     //backgroundColor: '#DEDEDE',
     borderWidth: 1,
-    textAlign: 'center'
+    textAlign: 'center',
+    borderRadius: 50,
   },
 
+  infotext: {
+    padding: 10,
+    color: '#000',
+    fontSize: 20,
+    //backgroundColor: '#DEDEDE',
+    textAlign: 'center',
+  },
 
 });
 
@@ -86,9 +96,7 @@ class LoginScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.container}>
           <Image source={require('./assets/logo.png')} style={styles.image} />
-        </View>
         <View style={styles.textinputcontainer}>
           <TextInput
             style={styles.inputtext}
@@ -135,31 +143,7 @@ class LoginScreen extends React.Component {
           >
             <Text style={styles.buttontext}>Login</Text>
           </TouchableOpacity>
-          {/* <Button
-          title="Login"
-          onPress={async () => {
-            const api_subroute = "/api/login"
-            try{
-              let uname = this.state.username;
-              let pass = this.state.password;
-              let response = await fetch(API_BASEROUTE + api_subroute, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: 'username=' + uname + '&password=' + pass
-              });
-              if (response.ok) {
-                global.authToken = await response.text();
-                this.props.navigation.navigate('MainMenu');
-              } else {
-                  throw new Error(response.status + " (" + await response.text()+ ")");
-              }
-            }  catch(error) {
-              alert(error)
-          }
-          }}
-        /> */}
+
         </View>
       </View>
     );
@@ -245,13 +229,15 @@ class ResourceMenuScreen extends React.Component {
           data={this.state.dataSource}
           renderItem={({item}) => (
             <View style = {{margin: 10}}>
-            <Button
-              title = {item.name}
-              key = {"button_section_" + item.id}
+            <TouchableOpacity
               onPress={ () => {
                 this.props.navigation.navigate('Section', item)
-              }}
-            />
+                }}
+              key = {"button_section_" + String(item.id)}
+              style={styles.button}
+          >
+            <Text style={styles.buttontext}>{item.name}</Text>
+            </TouchableOpacity>
             </View>
           )}
           />
@@ -275,17 +261,21 @@ class SectionScreen extends React.Component {
   render() {
 
     return (
+      
       <View>
-        <Text> {this.sectionInfo.text} </Text>
+        <Text style={styles.infotext}> {this.sectionInfo.text} </Text>
+
         <FlatList
-          style={{flex:1, margin: 10}}
+          //style={{flex:1, margin: 10}}
           data={this.sectionInfo.files}
           renderItem={({item}) => (
             <View style = {{margin: 10}}>
-            <Button
-              title = {item[0]}
-              onPress={() => Linking.openURL(API_BASEROUTE+"/files/"+item[1]+"?token="+global.authToken)}
-            />
+            <TouchableOpacity
+              onPress={ () => Linking.openURL(API_BASEROUTE+"/files/"+item[1]+"?token="+global.authToken) }
+              style={styles.button}
+          >
+            <Text style={styles.buttontext}>{item[0]}</Text>
+          </TouchableOpacity>
             </View>
           )}
           keyExtractor={(item, index) => index.toString()}
@@ -303,7 +293,7 @@ class ForumMenuScreen extends React.Component {
   render() {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>Topic List Here</Text>
+        <Text style={styles.infotext} >Topic List wil be shown here.</Text>
       </View>
     );
   }
@@ -316,7 +306,7 @@ class TopicScreen extends React.Component {
   render() {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>Original post and child comments will be displayed here</Text>
+        <Text style={styles.infotext}>Original post and child comments will be displayed here.</Text>
       </View>
     );
   }
@@ -329,7 +319,7 @@ class SettingsScreen extends React.Component {
   render() {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>Settings Here</Text>
+        <Text style={styles.infotext}>Settings will be shown here.</Text>
       </View>
     );
   }
