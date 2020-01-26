@@ -271,10 +271,10 @@ class SectionScreen extends React.Component {
           renderItem={({item}) => (
             <View style = {{margin: 10}}>
             <TouchableOpacity
-              onPress={ () => Linking.openURL(API_BASEROUTE+"/files/"+item[1]+"?token="+global.authToken) }
+              onPress={ () => Linking.openURL(API_BASEROUTE+"/files/"+item.path+"?token="+global.authToken) }
               style={styles.button}
           >
-            <Text style={styles.buttontext}>{item[0]}</Text>
+            <Text style={styles.buttontext}>{item.title}</Text>
           </TouchableOpacity>
             </View>
           )}
