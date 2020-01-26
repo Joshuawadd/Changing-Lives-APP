@@ -1,8 +1,9 @@
 import React from 'react';
-import { Image, StyleSheet, Text, View, TextInput, ActivityIndicator, Button, TouchableOpacity } from 'react-native';
+import { Image, StyleSheet, Text, View, TextInput, ActivityIndicator, Button, TouchableOpacity, FlatList} from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { API_BASEROUTE } from 'react-native-dotenv'
+import { Linking } from 'expo';
 
 const styles = StyleSheet.create({
   container: {
@@ -168,10 +169,6 @@ class LoginScreen extends React.Component {
 class MainMenuScreen extends React.Component {
   constructor(props) {
     super(props);
-    //alert(this.authToken)
-    //this.authToken = this.props.navigation.state.params.authToken
-    //alert(this.props.navigation.state.params)
-    //this.state = { isLoading: true }
   }
 
   static navigationOptions = {
@@ -221,33 +218,18 @@ class ResourceMenuScreen extends React.Component {
     title: 'Resources',
   };
 
-
-  componentDidMount() {
-    var api_subroute = "/api/sections?token=" + global.authToken
-    genericGet(API_BASEROUTE + api_subroute).then((responseJson) => {
-      this.setState({
-        isLoading: false,
-        dataSource: responseJson,
-      }, function () { });
-
-    })
+  componentDidMount(){
+      var api_subroute = "/api/section/list?token="+global.authToken
+      genericGet(API_BASEROUTE + api_subroute).then((responseJson) => {
+        this.setState({
+          isLoading: false,
+          dataSource: responseJson,
+        }, function(){});
+        
+      })
   }
 
-  renderButtons() {
-    return this.state.dataSource.map((item) => {
-      return (
-        <Button
-          title={item.name}
-          onPress={() => {
-            this.props.navigation.navigate('Section', item)
-          }}
-        />
-
-      );
-    });
-  }
-
-  render() {
+  render(){
 
     if (this.state.isLoading) {
       return (
@@ -257,12 +239,22 @@ class ResourceMenuScreen extends React.Component {
       )
     }
 
-    return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        {
-          this.renderButtons()
-        }
-      </View>
+    return(
+       <FlatList
+          style={{flex:1, margin: 10}}
+          data={this.state.dataSource}
+          renderItem={({item}) => (
+            <View style = {{margin: 10}}>
+            <Button
+              title = {item.name}
+              key = {"button_section_" + item.id}
+              onPress={ () => {
+                this.props.navigation.navigate('Section', item)
+              }}
+            />
+            </View>
+          )}
+          />
     );
   }
 }
@@ -283,11 +275,23 @@ class SectionScreen extends React.Component {
   render() {
 
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>{this.sectionInfo.text}</Text>
-        <Text>{JSON.stringify(this.sectionInfo)}</Text>
-      </View>
-    );
+      <View>
+        <Text> {this.sectionInfo.text} </Text>
+        <FlatList
+          style={{flex:1, margin: 10}}
+          data={this.sectionInfo.files}
+          renderItem={({item}) => (
+            <View style = {{margin: 10}}>
+            <Button
+              title = {item[0]}
+              onPress={() => Linking.openURL(API_BASEROUTE+"/files/"+item[1]+"?token="+global.authToken)}
+            />
+            </View>
+          )}
+          keyExtractor={(item, index) => index.toString()}
+          />
+        </View>
+      );
   }
 }
 
