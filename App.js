@@ -1,16 +1,58 @@
 import React from 'react';
-import { StyleSheet, Text, View, TextInput, ActivityIndicator, Button } from 'react-native';
-import { createAppContainer  } from 'react-navigation';
+import { Image, StyleSheet, Text, View, TextInput, ActivityIndicator, Button, TouchableOpacity } from 'react-native';
+import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { API_BASEROUTE } from 'react-native-dotenv'
 
 const styles = StyleSheet.create({
   container: {
+    width: '100%',
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-evenly'
   },
+
+  button: {
+    //alignItems: 'center',
+    backgroundColor: '#DDDDDD',
+    padding: 30,
+    backgroundColor: '#253D98',
+    alignItems: "center",
+    borderRadius: 50
+  },
+
+  buttoncontainer: {
+    width: '80%',
+    flex: 2,
+    justifyContent: 'space-evenly',
+  },
+
+  image: {
+    width: '80%',
+    resizeMode: 'contain'
+  },
+
+  buttontext: {
+    color: '#fff',
+    fontSize: 20,
+  },
+
+  textinputcontainer: {
+    width: '80%',
+    flex: 2,
+    justifyContent: 'space-evenly',
+  },
+
+  inputtext: {
+    color: '#000',
+    fontSize: 30,
+    //backgroundColor: '#DEDEDE',
+    borderWidth: 1,
+    textAlign: 'center'
+  },
+
+
 });
 
 
@@ -42,21 +84,57 @@ class LoginScreen extends React.Component {
 
   render() {
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <TextInput
-        style = {{height:40}}
-        placeholder = "Username"
-        onChangeText={(username)=>this.setState({username})}
-        value={this.state.username}
-        />
-        <TextInput
-        style = {{height:40}}
-        secureTextEntry={true}
-        placeholder = "Password"
-        onChangeText={(password)=>this.setState({password})}
-        value={this.state.password}
-        />
-        <Button
+      <View style={styles.container}>
+        <View style={styles.container}>
+          <Image source={require('./assets/logo.png')} style={styles.image} />
+        </View>
+        <View style={styles.textinputcontainer}>
+          <TextInput
+            style={styles.inputtext}
+            placeholder="Username"
+            onChangeText={(username) => this.setState({ username })}
+            value={this.state.username}
+          />
+          <TextInput
+            style={styles.inputtext}
+            secureTextEntry={true}
+            placeholder="Password"
+            onChangeText={(password) => this.setState({ password })}
+            value={this.state.password}
+          />
+        </View>
+        <View style={{
+          width: '80%',
+          flex: 2,
+        }}>
+          <TouchableOpacity
+            onPress={async () => {
+              const api_subroute = "/api/login"
+              try {
+                let uname = this.state.username;
+                let pass = this.state.password;
+                let response = await fetch(API_BASEROUTE + api_subroute, {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                  },
+                  body: 'username=' + uname + '&password=' + pass
+                });
+                if (response.ok) {
+                  global.authToken = await response.text();
+                  this.props.navigation.navigate('MainMenu');
+                } else {
+                  throw new Error(response.status + " (" + await response.text() + ")");
+                }
+              } catch (error) {
+                alert(error)
+              }
+            }}
+            style={styles.button}
+          >
+            <Text style={styles.buttontext}>Login</Text>
+          </TouchableOpacity>
+          {/* <Button
           title="Login"
           onPress={async () => {
             const api_subroute = "/api/login"
@@ -80,14 +158,15 @@ class LoginScreen extends React.Component {
               alert(error)
           }
           }}
-        />
+        /> */}
+        </View>
       </View>
     );
   }
 }
 
 class MainMenuScreen extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     //alert(this.authToken)
     //this.authToken = this.props.navigation.state.params.authToken
@@ -101,21 +180,31 @@ class MainMenuScreen extends React.Component {
 
   render() {
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        
-        
-        <Button
-          title="Resources"
-          onPress={() => this.props.navigation.navigate('ResourceMenu')}
-        />
-        <Button
-          title="Forum"
-          onPress={() => this.props.navigation.navigate('ForumMenu')}
-        />
-        <Button
-          title="Settings"
-          onPress={() => this.props.navigation.navigate('Settings')}
-        />
+      <View style={styles.container}>
+        <View style={styles.container}>
+          <Image source={require('./assets/logo.png')} style={styles.image} />
+        </View>
+        <View style={styles.buttoncontainer}>
+          <TouchableOpacity
+            onPress={() => this.props.navigation.navigate('ResourceMenu')}
+            style={styles.button}
+          >
+            <Text style={styles.buttontext}>Resources</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => this.props.navigation.navigate('ForumMenu')}
+            style={styles.button}
+          >
+            <Text style={styles.buttontext}>Forum</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => this.props.navigation.navigate('Settings')}
+            style={styles.button}
+          >
+            <Text style={styles.buttontext}>Settings</Text>
+          </TouchableOpacity>
+        </View>
+        <View></View>
       </View>
     );
   }
@@ -123,7 +212,7 @@ class MainMenuScreen extends React.Component {
 
 class ResourceMenuScreen extends React.Component {
 
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = { isLoading: true }
   }
@@ -131,48 +220,48 @@ class ResourceMenuScreen extends React.Component {
   static navigationOptions = {
     title: 'Resources',
   };
-  
 
-  componentDidMount(){
-      var api_subroute = "/api/sections?token="+global.authToken
-      genericGet(API_BASEROUTE + api_subroute).then((responseJson) => {
-        this.setState({
-          isLoading: false,
-          dataSource: responseJson,
-        }, function(){});
-        
-      })
+
+  componentDidMount() {
+    var api_subroute = "/api/sections?token=" + global.authToken
+    genericGet(API_BASEROUTE + api_subroute).then((responseJson) => {
+      this.setState({
+        isLoading: false,
+        dataSource: responseJson,
+      }, function () { });
+
+    })
   }
 
   renderButtons() {
     return this.state.dataSource.map((item) => {
-        return (
-            <Button 
-              title = {item.name}
-              onPress={ () => {
-                this.props.navigation.navigate('Section', item)
-              }}
-            />
+      return (
+        <Button
+          title={item.name}
+          onPress={() => {
+            this.props.navigation.navigate('Section', item)
+          }}
+        />
 
-        );
+      );
     });
   }
 
-  render(){
+  render() {
 
-    if(this.state.isLoading){
-      return(
-        <View style={{flex: 1, padding: 20}}>
-          <ActivityIndicator/>
+    if (this.state.isLoading) {
+      return (
+        <View style={{ flex: 1, padding: 20 }}>
+          <ActivityIndicator />
         </View>
       )
     }
 
-    return(
+    return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      {
-        this.renderButtons()
-      }
+        {
+          this.renderButtons()
+        }
       </View>
     );
   }
@@ -181,18 +270,18 @@ class ResourceMenuScreen extends React.Component {
 
 class SectionScreen extends React.Component {
 
-  constructor(props){
+  constructor(props) {
     super(props);
     this.sectionInfo = this.props.navigation.state.params;
   }
 
 
-  static navigationOptions = ({navigation}) => ({
+  static navigationOptions = ({ navigation }) => ({
     title: `${navigation.state.params.name}`,
   });
 
   render() {
-    
+
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <Text>{this.sectionInfo.text}</Text>
