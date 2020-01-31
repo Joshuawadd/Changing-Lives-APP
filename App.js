@@ -81,13 +81,19 @@ function genericGet(url) {
     });
 }
 
-function genericPost(url, body) {
-  return fetch(url, {
+function genericPost(baseroute, subroute, body) {
+  //controller is used to abort as a timeout
+  let controller = new AbortController();
+  const timeout = 10 //seconds
+  setTimeout(() => controller.abort(), timeout*1000);
+
+  return fetch(baseroute + subroute, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
     body: body,
+    signal: controller.signal,
   })
   .then((response) => {
     const contentType = response.headers.get("content-type")
@@ -105,10 +111,16 @@ function genericPost(url, body) {
       })
     }
   }).catch((e) => {
+    console.log(e)
     var errorText
-    if (e.message == "Network request failed") {
-      errorText = "Failed to connect to server"
-      errorText += " at " + API_BASEROUTE
+    if ((e.message == "Network request failed") || (e.message == "Aborted")) {
+      errorText = "Failed to connect to server within the time limit."
+      errorText += `\nAddress: ${baseroute}`
+      errorText += `\nPath: ${subroute}`
+      errorText += `\nTime limit: ${timeout} seconds`
+      errorText += `\nCheck the server is running at the specified address`
+      errorText += `, and that your device is connected to the same network as the server`
+      errorText += `.`
     } else {
       errorText = e.message
     }
@@ -160,46 +172,15 @@ class LoginScreen extends React.Component {
               const api_subroute = "/api/login"
               let uname = this.state.username;
               let pass = this.state.password;
-              let url = API_BASEROUTE + api_subroute;
               let body = 'username=' + uname + '&password=' + pass;
-              //testNext();
-              let postResponse = await genericPost(url, body);
+              let postResponse = await genericPost(API_BASEROUTE, api_subroute, body);
               if (typeof(postResponse) !== 'undefined') {
                 global.authToken = postResponse
                 this.props.navigation.navigate('MainMenu');
               }
-              /*console.log("xx "+ JSON.stringify( await xx))
-              //alert("STOP")
-              try {
-                
-                let response = await fetch(url, {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                  },
-                  body: 'username=' + uname + '&password=' + pass,
-                });
-                //await response;
-                if (response.ok) {
-                  global.authToken = await response.text();
-                  this.props.navigation.navigate('MainMenu');
-                } else {
-                  throw new Error(response.status + " (" + await response.text() + ")");
-                }
-              } catch (error) {
-                var errorText;
-                //console.log(error.message)
-                if (error.message == "Network request failed") {
-                  errorText = "Failed to connect to server"
-                  errorText += " at " + API_BASEROUTE
-                } else {
-                  errorText = error.message
-                }
-                //alert(errorText)
-              }*/
             }}
             style={styles.button}
-          >
+            >
             <Text style={styles.buttontext}>Login</Text>
           </TouchableOpacity>
 
