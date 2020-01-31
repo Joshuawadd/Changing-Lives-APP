@@ -67,42 +67,42 @@ const styles = StyleSheet.create({
 });
 
 
-//expects JSON response
-function genericGet(url) {
-  return fetch(url)
-    .then((response) => {
-      response.json()
-    })
-    .then((responseJson) => {
-      return responseJson;
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+function genericGet(baseroute, subroute, query='') {
+  const fetchArgs = {
+    method: 'GET',
+  }
+  return genericRequest(fetchArgs, baseroute, subroute, query)
 }
 
-function genericPost(baseroute, subroute, body) {
-  //controller is used to abort as a timeout
-  let controller = new AbortController();
-  const timeout = 10 //seconds
-  setTimeout(() => controller.abort(), timeout*1000);
-
-  return fetch(baseroute + subroute, {
+function genericPost(baseroute, subroute, body='') {
+  const fetchArgs = {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
-    body: body,
-    signal: controller.signal,
-  })
+    body: body
+  }
+  return genericRequest(fetchArgs, baseroute, subroute)
+}
+
+function genericRequest(fetchArgs, baseroute, subroute, query='') {
+  //controller is used to abort as a timeout
+  let controller = new AbortController();
+  const timeout = 10 //seconds
+  setTimeout(() => controller.abort(), timeout*1000);
+  fetchArgs.signal = controller.signal
+
+  return fetch(baseroute + subroute + query, fetchArgs)
   .then((response) => {
     const contentType = response.headers.get("content-type")
     if (contentType.indexOf("application/json") === 0) { // data is JSON format 
-      return response.json().then((responseJson) => {
-        return responseJson
+      return response.json()
+      .then((responseJson) => {
+        return responseJson;
       })
     } else { // data is text format
-      return response.text().then((responseText) => {
+      return response.text()
+      .then((responseText) => {
         if (response.ok) {
           return responseText
         } else {
@@ -111,7 +111,7 @@ function genericPost(baseroute, subroute, body) {
       })
     }
   }).catch((e) => {
-    console.log(e)
+    //console.log(e)
     var errorText
     if ((e.message == "Network request failed") || (e.message == "Aborted")) {
       errorText = "Failed to connect to server within the time limit."
@@ -241,8 +241,9 @@ class ResourceMenuScreen extends React.Component {
   };
 
   componentDidMount(){
-      var api_subroute = "/api/section/list?token="+global.authToken
-      genericGet(API_BASEROUTE + api_subroute).then((responseJson) => {
+      var api_subroute = "/api/section/list"
+      var api_query = `?token=${global.authToken}`
+      genericGet(API_BASEROUTE, api_subroute, api_query).then((responseJson) => {
         this.setState({
           isLoading: false,
           dataSource: responseJson,
