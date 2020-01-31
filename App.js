@@ -67,9 +67,12 @@ const styles = StyleSheet.create({
 });
 
 
+//expects JSON response
 function genericGet(url) {
   return fetch(url)
-    .then((response) => response.json())
+    .then((response) => {
+      response.json()
+    })
     .then((responseJson) => {
       return responseJson;
     })
@@ -78,13 +81,49 @@ function genericGet(url) {
     });
 }
 
+function genericPost(url, body) {
+  return fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: body,
+  })
+  .then((response) => {
+    const contentType = response.headers.get("content-type")
+    if (contentType.indexOf("application/json") === 0) { // data is JSON format 
+      return response.json().then((responseJson) => {
+        return responseJson
+      })
+    } else { // data is text format
+      return response.text().then((responseText) => {
+        if (response.ok) {
+          return responseText
+        } else {
+          throw new Error ("Error: "+ responseText + " (status code " + response.status + ")")
+        }
+      })
+    }
+  }).catch((e) => {
+    var errorText
+    if (e.message == "Network request failed") {
+      errorText = "Failed to connect to server"
+      errorText += " at " + API_BASEROUTE
+    } else {
+      errorText = e.message
+    }
+    alert(errorText)
+  })
+}
+
+
 class LoginScreen extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      username: '',
-      password: ''
+      username: 'CLStaff',
+      password: 'admin'
     };
     global.authToken = ''
   }
@@ -119,16 +158,28 @@ class LoginScreen extends React.Component {
           <TouchableOpacity
             onPress={async () => {
               const api_subroute = "/api/login"
+              let uname = this.state.username;
+              let pass = this.state.password;
+              let url = API_BASEROUTE + api_subroute;
+              let body = 'username=' + uname + '&password=' + pass;
+              //testNext();
+              let postResponse = await genericPost(url, body);
+              if (typeof(postResponse) !== 'undefined') {
+                global.authToken = postResponse
+                this.props.navigation.navigate('MainMenu');
+              }
+              /*console.log("xx "+ JSON.stringify( await xx))
+              //alert("STOP")
               try {
-                let uname = this.state.username;
-                let pass = this.state.password;
-                let response = await fetch(API_BASEROUTE + api_subroute, {
+                
+                let response = await fetch(url, {
                   method: 'POST',
                   headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                   },
-                  body: 'username=' + uname + '&password=' + pass
+                  body: 'username=' + uname + '&password=' + pass,
                 });
+                //await response;
                 if (response.ok) {
                   global.authToken = await response.text();
                   this.props.navigation.navigate('MainMenu');
@@ -136,8 +187,16 @@ class LoginScreen extends React.Component {
                   throw new Error(response.status + " (" + await response.text() + ")");
                 }
               } catch (error) {
-                alert(error)
-              }
+                var errorText;
+                //console.log(error.message)
+                if (error.message == "Network request failed") {
+                  errorText = "Failed to connect to server"
+                  errorText += " at " + API_BASEROUTE
+                } else {
+                  errorText = error.message
+                }
+                //alert(errorText)
+              }*/
             }}
             style={styles.button}
           >
