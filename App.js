@@ -5,62 +5,62 @@ import { createStackNavigator } from 'react-navigation-stack';
 import { API_BASEROUTE } from 'react-native-dotenv'
 import { Linking } from 'expo';
 
+// Note: styles can be stacked by setting the style prop as an array
+// e.g. style={[styles.button, styles.textinput, {width: 50%}] will apply these 3 styles in left-to-right order
 const styles = StyleSheet.create({
+  
+  // main view, contains everything on each page:
   container: {
-    width: '100%',
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#FFF',
     alignItems: 'center',
-    justifyContent: 'space-evenly'
   },
 
+  // contains multiple buttons or button-like elements
+  buttoncontainer: {
+    flexGrow: 1,
+    backgroundColor: '#FFF',
+    width: '80%',
+    justifyContent: 'space-evenly',
+  },
+
+  // button element (also used as base for stacking text input style onto)
   button: {
-    //alignItems: 'center',
-    backgroundColor: '#DDDDDD',
     padding: '5%',
     backgroundColor: '#253D98',
     alignItems: "center",
-    borderRadius: 50
+    borderRadius: 50,
+    marginTop: '5%',
+    marginBottom: '5%',
   },
-
-  buttoncontainer: {
-    width: '80%',
-    flex: 2,
-    justifyContent: 'space-evenly',
-  },
-
-  image: {
-    width: '80%',
-    resizeMode: 'contain'
-  },
-
+  
+  // text inside button
   buttontext: {
-    color: '#fff',
+    color: '#FFF',
     fontSize: 20,
   },
 
-  textinputcontainer: {
-    width: '80%',
-    flex: 2,
-    justifyContent: 'space-evenly',
-    
-  },
-
-  inputtext: {
-    padding: '5%',
+  // text input area (styles apply to text itself as well)
+  textinput: {
     color: '#000',
-    fontSize: 20,
-    //backgroundColor: '#DEDEDE',
+    backgroundColor: '#FFF',
     borderWidth: 1,
     textAlign: 'center',
-    borderRadius: 50,
+    fontSize: 20,
   },
 
+  // "full"-width images
+  image: {
+    width: '80%',
+    resizeMode: 'contain',
+  },
+
+  // text information
   infotext: {
     padding: '5%',
     color: '#000',
     fontSize: 20,
-    //backgroundColor: '#DEDEDE',
+    backgroundColor: '#FFF',
     textAlign: 'center',
   },
 
@@ -128,14 +128,60 @@ function genericRequest(fetchArgs, baseroute, subroute, query='') {
   })
 }
 
+<<<<<<< HEAD
 
 class LoginScreen extends React.Component {
+=======
+// reusable button list component
+class ButtonList extends React.Component {
+  constructor(props) {
+    super(props);
+    if (typeof this.props.titleKey === "undefined") {
+      this.titleKey = "title"
+    } else {
+      this.titleKey = this.props.titleKey
+    }
+    if (typeof this.props.style === "undefined") {
+      this.style = styles.buttoncontainer
+    } else {
+      this.style = this.props.style
+    }
+  }
+  
+  render() {
+    const {width, ...containerStyle} = this.style
+    return (
+        <FlatList
+          style = {{width: width}}
+          contentContainerStyle = {[containerStyle]}
+          data = {this.props.data}
+          renderItem={({item}) => (
+            <TouchableOpacity 
+              style={styles.button}
+              onPress={() => this.props.onPress(item)}
+              >
+              <Text style={styles.buttontext}>{item[this.titleKey]}</Text>
+            </TouchableOpacity>
+          )}
+          keyExtractor={(item, index) => index.toString()}
+        />
+    )
+  }
+}
 
+>>>>>>> add_buttonlist
+
+class LoginScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+<<<<<<< HEAD
       username: 'CLStaff',
       password: 'admin'
+=======
+      username: '',
+      password: '',
+>>>>>>> add_buttonlist
     };
     global.authToken = ''
   }
@@ -146,28 +192,24 @@ class LoginScreen extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
-          <Image source={require('./assets/logo.png')} style={styles.image} />
-        <View style={styles.textinputcontainer}>
+      <View style={[styles.container]}>
+        <Image source={require('./assets/logo.png')} style={styles.image} />
+        <View style={[styles.buttoncontainer]}>
           <TextInput
-            style={styles.inputtext}
+            style={[styles.button, styles.textinput]}
             placeholder="Username"
             onChangeText={(username) => this.setState({ username })}
             value={this.state.username}
           />
           <TextInput
-            style={styles.inputtext}
+            style={[styles.button, styles.textinput]}
             secureTextEntry={true}
             placeholder="Password"
             onChangeText={(password) => this.setState({ password })}
             value={this.state.password}
           />
-        </View>
-        <View style={{
-          width: '80%',
-          flex: 2,
-        }}>
           <TouchableOpacity
+            style={styles.button}
             onPress={async () => {
               const api_subroute = "/api/login"
               let uname = this.state.username;
@@ -178,12 +220,15 @@ class LoginScreen extends React.Component {
                 global.authToken = postResponse
                 this.props.navigation.navigate('MainMenu');
               }
+<<<<<<< HEAD
             }}
             style={styles.button}
             >
+=======
+            }}>
+>>>>>>> add_buttonlist
             <Text style={styles.buttontext}>Login</Text>
           </TouchableOpacity>
-
         </View>
       </View>
     );
@@ -202,29 +247,26 @@ class MainMenuScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-          <Image source={require('./assets/logo.png')} style={styles.image} />
-        <View style={styles.buttoncontainer}>
-          <TouchableOpacity
-            onPress={() => this.props.navigation.navigate('ResourceMenu')}
-            style={styles.button}
-          >
-            <Text style={styles.buttontext}>Resources</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => this.props.navigation.navigate('ForumMenu')}
-            style={styles.button}
-          >
-            <Text style={styles.buttontext}>Forum</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => this.props.navigation.navigate('Settings')}
-            style={styles.button}
-          >
-            <Text style={styles.buttontext}>Settings</Text>
-          </TouchableOpacity>
+        <Image source={require('./assets/logo.png')} style={styles.image} />
+        <ButtonList
+          style = {styles.buttoncontainer}
+          data = {[
+            {
+              title: 'Resources',
+              target: 'ResourceMenu',
+            },
+            {
+              title: 'Forum',
+              target: 'ForumMenu',
+            },
+            {
+              title: 'Settings',
+              target: 'Settings',
+            },
+          ]}
+          onPress={(item) => this.props.navigation.navigate(item.target)}
+        />
         </View>
-        <View></View>
-      </View>
     );
   }
 }
@@ -263,23 +305,17 @@ class ResourceMenuScreen extends React.Component {
     }
 
     return(
-       <FlatList
-          style={{flex:1, margin: 10}}
+      <View style={styles.container}>
+        <Text style={styles.infotext}>Select a section to view its resources.</Text>
+        <ButtonList
+          style={styles.buttoncontainer}
           data={this.state.dataSource}
-          renderItem={({item}) => (
-            <View style = {{margin: 10}}>
-            <TouchableOpacity
-              onPress={ () => {
-                this.props.navigation.navigate('Section', item)
-                }}
-              style={styles.button}
-          >
-            <Text style={styles.buttontext}>{item.name}</Text>
-            </TouchableOpacity>
-            </View>
-          )}
-          keyExtractor={(item, index) => item.id.toString()}
-          />
+          onPress={ (item) => {
+            this.props.navigation.navigate('Section', item)
+          }}
+          titleKey = "name"
+        />
+      </View>
     );
   }
 }
@@ -300,25 +336,12 @@ class SectionScreen extends React.Component {
   render() {
 
     return (
-      
-      <View>
-        <Text style={styles.infotext}> {this.sectionInfo.text} </Text>
-
-        <FlatList
-          //style={{flex:1, margin: 10}}
+      <View style={styles.container}>
+        <Text style={styles.infotext}>{this.sectionInfo.text}</Text>
+        <ButtonList
           data={this.sectionInfo.files}
-          renderItem={({item}) => (
-            <View style = {{margin: 10}}>
-            <TouchableOpacity
-              onPress={ () => Linking.openURL(API_BASEROUTE+"/files/"+item.path+"?token="+global.authToken) }
-              style={styles.button}
-          >
-            <Text style={styles.buttontext}>{item.title}</Text>
-          </TouchableOpacity>
-            </View>
-          )}
-          keyExtractor={(item, index) => index.toString()}
-          />
+          onPress={ (item) => Linking.openURL(API_BASEROUTE+"/files/"+item.path+"?token="+global.authToken) }
+        />
         </View>
       );
   }
@@ -331,7 +354,7 @@ class ForumMenuScreen extends React.Component {
   };
   render() {
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <View style={styles.container}>
         <Text style={styles.infotext} >Topic List wil be shown here.</Text>
       </View>
     );
@@ -344,12 +367,13 @@ class TopicScreen extends React.Component {
   };
   render() {
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <View style={styles.container}>
         <Text style={styles.infotext}>Original post and child comments will be displayed here.</Text>
       </View>
     );
   }
 }
+
 
 class SettingsScreen extends React.Component {
   static navigationOptions = {
@@ -357,10 +381,24 @@ class SettingsScreen extends React.Component {
   };
   render() {
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <View style={styles.container}>
         <Text style={styles.infotext}>Settings will be shown here.</Text>
       </View>
     );
+  }
+}
+
+class ButtonListTestScreen extends React.Component {
+  render() {
+    const numButtons = 20
+    
+    return (
+      <ButtonList
+        style = {{}}
+        data = {Array.from({length: numButtons}, (x,i) => i).map(x => ({title: "Button "+x, alert: "You pressed button "+x}))}
+        onPress = {(item) => alert(item.alert)}
+      />
+    )
   }
 }
 
@@ -373,6 +411,8 @@ const AppNavigator = createStackNavigator(
     ForumMenu: ForumMenuScreen,
     Topic: TopicScreen,
     Settings: SettingsScreen,
+    
+    ButtonListTest: ButtonListTestScreen,
   },
   {
     initialRouteName: 'Login'
