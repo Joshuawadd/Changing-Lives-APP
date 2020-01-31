@@ -128,10 +128,6 @@ function genericRequest(fetchArgs, baseroute, subroute, query='') {
   })
 }
 
-<<<<<<< HEAD
-
-class LoginScreen extends React.Component {
-=======
 // reusable button list component
 class ButtonList extends React.Component {
   constructor(props) {
@@ -169,19 +165,13 @@ class ButtonList extends React.Component {
   }
 }
 
->>>>>>> add_buttonlist
 
 class LoginScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-<<<<<<< HEAD
-      username: 'CLStaff',
-      password: 'admin'
-=======
       username: '',
       password: '',
->>>>>>> add_buttonlist
     };
     global.authToken = ''
   }
@@ -220,13 +210,7 @@ class LoginScreen extends React.Component {
                 global.authToken = postResponse
                 this.props.navigation.navigate('MainMenu');
               }
-<<<<<<< HEAD
-            }}
-            style={styles.button}
-            >
-=======
             }}>
->>>>>>> add_buttonlist
             <Text style={styles.buttontext}>Login</Text>
           </TouchableOpacity>
         </View>
