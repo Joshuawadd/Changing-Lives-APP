@@ -4,13 +4,15 @@
 import os
 
 filename_fixed = "./blacklist_for_invalid_regular_expression_fix.js"
-#filename_broken = "./node_modules/metro/node_modules/metro-config/src/defaults/blacklist.js"
-filename_broken = "./node_modules/react-native/node_modules/@react-native-community/cli/node_modules/metro-config/src/defaults/blacklist.js"
+filenames_broken = []
+filenames_broken.append("./node_modules/metro/node_modules/metro-config/src/defaults/blacklist.js")
+filenames_broken.append("./node_modules/react-native/node_modules/@react-native-community/cli/node_modules/metro-config/src/defaults/blacklist.js")
 
 f_fixed = open(filename_fixed, "r")
 fixed_content = f_fixed.read()
 f_fixed.close()
 
-f_broken = open(filename_broken, "w")
-f_broken.write(fixed_content)
-f_broken.close()
+for filename_broken in filenames_broken:
+    f_broken = open(filename_broken, "w")
+    f_broken.write(fixed_content)
+    f_broken.close()

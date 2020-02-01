@@ -5,86 +5,173 @@ import { createStackNavigator } from 'react-navigation-stack';
 import { API_BASEROUTE } from 'react-native-dotenv'
 import { Linking } from 'expo';
 
+// Note: styles can be stacked by setting the style prop as an array
+// e.g. style={[styles.button, styles.textinput, {width: 50%}] will apply these 3 styles in left-to-right order
 const styles = StyleSheet.create({
+  
+  // main view, contains everything on each page:
   container: {
-    width: '100%',
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#FFF',
     alignItems: 'center',
-    justifyContent: 'space-evenly'
   },
 
+  // contains multiple buttons or button-like elements
+  buttoncontainer: {
+    flexGrow: 1,
+    backgroundColor: '#FFF',
+    width: '80%',
+    justifyContent: 'space-evenly',
+  },
+
+  // button element (also used as base for stacking text input style onto)
   button: {
-    //alignItems: 'center',
-    backgroundColor: '#DDDDDD',
     padding: '5%',
     backgroundColor: '#253D98',
     alignItems: "center",
-    borderRadius: 50
+    borderRadius: 50,
+    marginTop: '5%',
+    marginBottom: '5%',
   },
-
-  buttoncontainer: {
-    width: '80%',
-    flex: 2,
-    justifyContent: 'space-evenly',
-  },
-
-  image: {
-    width: '80%',
-    resizeMode: 'contain'
-  },
-
+  
+  // text inside button
   buttontext: {
-    color: '#fff',
+    color: '#FFF',
     fontSize: 20,
   },
 
-  textinputcontainer: {
-    width: '80%',
-    flex: 2,
-    justifyContent: 'space-evenly',
-    
-  },
-
-  inputtext: {
-    padding: '5%',
+  // text input area (styles apply to text itself as well)
+  textinput: {
     color: '#000',
-    fontSize: 20,
-    //backgroundColor: '#DEDEDE',
+    backgroundColor: '#FFF',
     borderWidth: 1,
     textAlign: 'center',
-    borderRadius: 50,
+    fontSize: 20,
   },
 
+  // "full"-width images
+  image: {
+    width: '80%',
+    resizeMode: 'contain',
+  },
+
+  // text information
   infotext: {
     padding: '5%',
     color: '#000',
     fontSize: 20,
-    //backgroundColor: '#DEDEDE',
+    backgroundColor: '#FFF',
     textAlign: 'center',
   },
 
 });
 
 
-function genericGet(url) {
-  return fetch(url)
-    .then((response) => response.json())
-    .then((responseJson) => {
-      return responseJson;
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+function genericGet(baseroute, subroute, query='') {
+  const fetchArgs = {
+    method: 'GET',
+  }
+  return genericRequest(fetchArgs, baseroute, subroute, query)
 }
 
-class LoginScreen extends React.Component {
+function genericPost(baseroute, subroute, body='') {
+  const fetchArgs = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: body
+  }
+  return genericRequest(fetchArgs, baseroute, subroute)
+}
 
+function genericRequest(fetchArgs, baseroute, subroute, query='') {
+  //controller is used to abort as a timeout
+  let controller = new AbortController();
+  const timeout = 10 //seconds
+  setTimeout(() => controller.abort(), timeout*1000);
+  fetchArgs.signal = controller.signal
+
+  return fetch(baseroute + subroute + query, fetchArgs)
+  .then((response) => {
+    const contentType = response.headers.get("content-type")
+    if (contentType.indexOf("application/json") === 0) { // data is JSON format 
+      return response.json()
+      .then((responseJson) => {
+        return responseJson;
+      })
+    } else { // data is text format
+      return response.text()
+      .then((responseText) => {
+        if (response.ok) {
+          return responseText
+        } else {
+          throw new Error ("Error: "+ responseText + " (status code " + response.status + ")")
+        }
+      })
+    }
+  }).catch((e) => {
+    //console.log(e)
+    var errorText
+    if ((e.message == "Network request failed") || (e.message == "Aborted")) {
+      errorText = "Failed to connect to server within the time limit."
+      errorText += `\nAddress: ${baseroute}`
+      errorText += `\nPath: ${subroute}`
+      errorText += `\nTime limit: ${timeout} seconds`
+      errorText += `\nCheck the server is running at the specified address`
+      errorText += `, and that your device is connected to the same network as the server`
+      errorText += `.`
+    } else {
+      errorText = e.message
+    }
+    alert(errorText)
+  })
+}
+
+// reusable button list component
+class ButtonList extends React.Component {
+  constructor(props) {
+    super(props);
+    if (typeof this.props.titleKey === "undefined") {
+      this.titleKey = "title"
+    } else {
+      this.titleKey = this.props.titleKey
+    }
+    if (typeof this.props.style === "undefined") {
+      this.style = styles.buttoncontainer
+    } else {
+      this.style = this.props.style
+    }
+  }
+  
+  render() {
+    const {width, ...containerStyle} = this.style
+    return (
+        <FlatList
+          style = {{width: width}}
+          contentContainerStyle = {[containerStyle]}
+          data = {this.props.data}
+          renderItem={({item}) => (
+            <TouchableOpacity 
+              style={styles.button}
+              onPress={() => this.props.onPress(item)}
+              >
+              <Text style={styles.buttontext}>{item[this.titleKey]}</Text>
+            </TouchableOpacity>
+          )}
+          keyExtractor={(item, index) => index.toString()}
+        />
+    )
+  }
+}
+
+
+class LoginScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       username: '',
-      password: ''
+      password: '',
     };
     global.authToken = ''
   }
@@ -95,55 +182,37 @@ class LoginScreen extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
-          <Image source={require('./assets/logo.png')} style={styles.image} />
-        <View style={styles.textinputcontainer}>
+      <View style={[styles.container]}>
+        <Image source={require('./assets/logo.png')} style={styles.image} />
+        <View style={[styles.buttoncontainer]}>
           <TextInput
-            style={styles.inputtext}
+            style={[styles.button, styles.textinput]}
             placeholder="Username"
             onChangeText={(username) => this.setState({ username })}
             value={this.state.username}
           />
           <TextInput
-            style={styles.inputtext}
+            style={[styles.button, styles.textinput]}
             secureTextEntry={true}
             placeholder="Password"
             onChangeText={(password) => this.setState({ password })}
             value={this.state.password}
           />
-        </View>
-        <View style={{
-          width: '80%',
-          flex: 2,
-        }}>
           <TouchableOpacity
+            style={styles.button}
             onPress={async () => {
               const api_subroute = "/api/login"
-              try {
-                let uname = this.state.username;
-                let pass = this.state.password;
-                let response = await fetch(API_BASEROUTE + api_subroute, {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                  },
-                  body: 'username=' + uname + '&password=' + pass
-                });
-                if (response.ok) {
-                  global.authToken = await response.text();
-                  this.props.navigation.navigate('MainMenu');
-                } else {
-                  throw new Error(response.status + " (" + await response.text() + ")");
-                }
-              } catch (error) {
-                alert(error)
+              let uname = this.state.username;
+              let pass = this.state.password;
+              let body = 'username=' + uname + '&password=' + pass;
+              let postResponse = await genericPost(API_BASEROUTE, api_subroute, body);
+              if (typeof(postResponse) !== 'undefined') {
+                global.authToken = postResponse
+                this.props.navigation.navigate('MainMenu');
               }
-            }}
-            style={styles.button}
-          >
+            }}>
             <Text style={styles.buttontext}>Login</Text>
           </TouchableOpacity>
-
         </View>
       </View>
     );
@@ -162,29 +231,26 @@ class MainMenuScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-          <Image source={require('./assets/logo.png')} style={styles.image} />
-        <View style={styles.buttoncontainer}>
-          <TouchableOpacity
-            onPress={() => this.props.navigation.navigate('ResourceMenu')}
-            style={styles.button}
-          >
-            <Text style={styles.buttontext}>Resources</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => this.props.navigation.navigate('ForumMenu')}
-            style={styles.button}
-          >
-            <Text style={styles.buttontext}>Forum</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => this.props.navigation.navigate('Settings')}
-            style={styles.button}
-          >
-            <Text style={styles.buttontext}>Settings</Text>
-          </TouchableOpacity>
+        <Image source={require('./assets/logo.png')} style={styles.image} />
+        <ButtonList
+          style = {styles.buttoncontainer}
+          data = {[
+            {
+              title: 'Resources',
+              target: 'ResourceMenu',
+            },
+            {
+              title: 'Forum',
+              target: 'ForumMenu',
+            },
+            {
+              title: 'Settings',
+              target: 'Settings',
+            },
+          ]}
+          onPress={(item) => this.props.navigation.navigate(item.target)}
+        />
         </View>
-        <View></View>
-      </View>
     );
   }
 }
@@ -201,8 +267,9 @@ class ResourceMenuScreen extends React.Component {
   };
 
   componentDidMount(){
-      var api_subroute = "/api/section/list?token="+global.authToken
-      genericGet(API_BASEROUTE + api_subroute).then((responseJson) => {
+      var api_subroute = "/api/section/list"
+      var api_query = `?token=${global.authToken}`
+      genericGet(API_BASEROUTE, api_subroute, api_query).then((responseJson) => {
         this.setState({
           isLoading: false,
           dataSource: responseJson,
@@ -222,23 +289,17 @@ class ResourceMenuScreen extends React.Component {
     }
 
     return(
-       <FlatList
-          style={{flex:1, margin: 10}}
+      <View style={styles.container}>
+        <Text style={styles.infotext}>Select a section to view its resources.</Text>
+        <ButtonList
+          style={styles.buttoncontainer}
           data={this.state.dataSource}
-          renderItem={({item}) => (
-            <View style = {{margin: 10}}>
-            <TouchableOpacity
-              onPress={ () => {
-                this.props.navigation.navigate('Section', item)
-                }}
-              style={styles.button}
-          >
-            <Text style={styles.buttontext}>{item.name}</Text>
-            </TouchableOpacity>
-            </View>
-          )}
-          keyExtractor={(item, index) => item.id.toString()}
-          />
+          onPress={ (item) => {
+            this.props.navigation.navigate('Section', item)
+          }}
+          titleKey = "name"
+        />
+      </View>
     );
   }
 }
@@ -259,25 +320,12 @@ class SectionScreen extends React.Component {
   render() {
 
     return (
-      
-      <View>
-        <Text style={styles.infotext}> {this.sectionInfo.text} </Text>
-
-        <FlatList
-          //style={{flex:1, margin: 10}}
+      <View style={styles.container}>
+        <Text style={styles.infotext}>{this.sectionInfo.text}</Text>
+        <ButtonList
           data={this.sectionInfo.files}
-          renderItem={({item}) => (
-            <View style = {{margin: 10}}>
-            <TouchableOpacity
-              onPress={ () => Linking.openURL(API_BASEROUTE+"/files/"+item.path+"?token="+global.authToken) }
-              style={styles.button}
-          >
-            <Text style={styles.buttontext}>{item.title}</Text>
-          </TouchableOpacity>
-            </View>
-          )}
-          keyExtractor={(item, index) => index.toString()}
-          />
+          onPress={ (item) => Linking.openURL(API_BASEROUTE+"/files/"+item.path+"?token="+global.authToken) }
+        />
         </View>
       );
   }
@@ -290,7 +338,7 @@ class ForumMenuScreen extends React.Component {
   };
   render() {
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <View style={styles.container}>
         <Text style={styles.infotext} >Topic List wil be shown here.</Text>
       </View>
     );
@@ -303,12 +351,13 @@ class TopicScreen extends React.Component {
   };
   render() {
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <View style={styles.container}>
         <Text style={styles.infotext}>Original post and child comments will be displayed here.</Text>
       </View>
     );
   }
 }
+
 
 class SettingsScreen extends React.Component {
   static navigationOptions = {
@@ -316,10 +365,24 @@ class SettingsScreen extends React.Component {
   };
   render() {
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <View style={styles.container}>
         <Text style={styles.infotext}>Settings will be shown here.</Text>
       </View>
     );
+  }
+}
+
+class ButtonListTestScreen extends React.Component {
+  render() {
+    const numButtons = 20
+    
+    return (
+      <ButtonList
+        style = {{}}
+        data = {Array.from({length: numButtons}, (x,i) => i).map(x => ({title: "Button "+x, alert: "You pressed button "+x}))}
+        onPress = {(item) => alert(item.alert)}
+      />
+    )
   }
 }
 
@@ -332,6 +395,8 @@ const AppNavigator = createStackNavigator(
     ForumMenu: ForumMenuScreen,
     Topic: TopicScreen,
     Settings: SettingsScreen,
+    
+    ButtonListTest: ButtonListTestScreen,
   },
   {
     initialRouteName: 'Login'
