@@ -94,24 +94,29 @@ function genericRequest(fetchArgs, baseroute, subroute, query='') {
 
   return fetch(baseroute + subroute + query, fetchArgs)
   .then((response) => {
-    const contentType = response.headers.get("content-type")
-    if (contentType.indexOf("application/json") === 0) { // data is JSON format 
-      return response.json()
-      .then((responseJson) => {
-        return responseJson;
-      })
-    } else { // data is text format
-      return response.text()
-      .then((responseText) => {
-        if (response.ok) {
+    if (response.ok) {
+      const contentType = response.headers.get("content-type")
+      if (contentType.indexOf("application/json") === 0) { // data is JSON format 
+        return response.json()
+        .then((responseJson) => {
+          return responseJson;
+        })
+      } else { // data is text format
+        return response.text()
+        .then((responseText) => {
           return responseText
-        } else {
-          throw new Error ("Error: "+ responseText + " (status code " + response.status + ")")
-        }
-      })
+        })
+      }
+    } else { //response not ok
+      return response.text()
+        .then((responseText) => {
+          var errorText
+          errorText  = "Error: "+ responseText
+          errorText += " (status code " + response.status + ")"
+          throw new Error (errorText)
+        })
     }
   }).catch((e) => {
-    //console.log(e)
     var errorText
     if ((e.message == "Network request failed") || (e.message == "Aborted")) {
       errorText = "Failed to connect to server within the time limit."
@@ -201,10 +206,10 @@ class LoginScreen extends React.Component {
           <TouchableOpacity
             style={styles.button}
             onPress={async () => {
-              const api_subroute = "/api/login"
+              const api_subroute = "/api/users/login"
               let uname = this.state.username;
               let pass = this.state.password;
-              let body = 'username=' + uname + '&password=' + pass;
+              let body = `userName=${uname}&userPassword=${pass}`;
               let postResponse = await genericPost(API_BASEROUTE, api_subroute, body);
               if (typeof(postResponse) !== 'undefined') {
                 global.authToken = postResponse
@@ -267,7 +272,7 @@ class ResourceMenuScreen extends React.Component {
   };
 
   componentDidMount(){
-      var api_subroute = "/api/section/list"
+      var api_subroute = "/api/sections/list"
       var api_query = `?token=${global.authToken}`
       genericGet(API_BASEROUTE, api_subroute, api_query).then((responseJson) => {
         this.setState({
@@ -324,7 +329,7 @@ class SectionScreen extends React.Component {
         <Text style={styles.infotext}>{this.sectionInfo.text}</Text>
         <ButtonList
           data={this.sectionInfo.files}
-          onPress={ (item) => Linking.openURL(API_BASEROUTE+"/files/"+item.path+"?token="+global.authToken) }
+          onPress={ (item) => Linking.openURL(`${API_BASEROUTE}/files/${item.path}?token=${global.authToken}`) }
         />
         </View>
       );
