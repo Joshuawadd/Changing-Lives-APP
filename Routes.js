@@ -27,8 +27,7 @@ const AppNavigator = createStackNavigator(
       ButtonListTest: ButtonListTestScreen,
     },
     {
-      initialRouteName: 'Login'
-      //initialRouteName: 'Settings'
+      initialRouteName: 'Home'
     }
 );
 

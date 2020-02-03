@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, Text, View, TextInput, TouchableOpacity } from 'react-native';
+import { Image, Text, View, TextInput, TouchableOpacity, BackHandler } from 'react-native';
 import { API_BASEROUTE } from 'react-native-dotenv';
 
 import { genericPost, storeData } from '../utils.js';
@@ -11,14 +11,25 @@ export default class LoginScreen extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
-        username: 'CLStaff',
-        password: 'admin',
+        username: '',
+        password: '',
       };
     }
   
     static navigationOptions = {
       title: 'User Login',
+      headerLeft: null,
+      gesturesEnabled: false,
     };
+
+    componentDidMount() {
+      BackHandler.addEventListener('hardwareBackPress', function() {return true})
+    }
+    
+    componentWillUnmount() {
+      // Remove the event listener
+      BackHandler.removeEventListener('hardwareBackPress', function() {return true})
+    }
   
     render() {
       return (
