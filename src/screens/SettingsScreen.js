@@ -14,11 +14,7 @@ export default class SettingsScreen extends React.Component {
     
     render() {
       this.clearAsyncStorage = async() => {
-        AsyncStorage.clear().then(()=>{
-          retrieveData('authToken')
-        }).then((authToken) => {
-          console.log(authToken)
-        });
+        AsyncStorage.clear()
       }
 
       return (
