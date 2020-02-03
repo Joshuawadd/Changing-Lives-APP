@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, Text, View, TextInput, TouchableOpacity } from 'react-native';
+import { Image, Text, View, TextInput, TouchableOpacity, BackHandler, KeyboardAvoidingView } from 'react-native';
 import { API_BASEROUTE } from 'react-native-dotenv';
 
 import { genericPost, storeData } from '../utils.js';
@@ -11,20 +11,37 @@ export default class LoginScreen extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
-        username: 'CLStaff',
-        password: 'admin',
+        username: '',
+        password: '',
       };
     }
   
     static navigationOptions = {
       title: 'User Login',
+      headerLeft: null,
+      gesturesEnabled: false,
     };
+
+    componentDidMount() {
+      // temporarily disable back button
+      this.backHandler = BackHandler.addEventListener('hardwareBackPress', function() {return true})
+    }
+    
+    componentWillUnmount() {
+      // stop disabling back button
+      this.backHandler.remove()
+    }
   
     render() {
+      //textinput cursor jumps to end: https://github.com/facebook/react-native/issues/27658
+      //keyboardavoidingview needs work
       return (
-        <View style={[styles.container]}>
+        <KeyboardAvoidingView
+          style={styles.container} behavior="padding" >
+            
           <Image source={require('../assets/logo.png')} style={styles.image} />
           <View style={[styles.buttoncontainer]}>
+            
             <TextInput
               style={[styles.button, styles.textinput]}
               placeholder="Username"
@@ -54,7 +71,7 @@ export default class LoginScreen extends React.Component {
               <Text style={styles.buttontext}>Login</Text>
             </TouchableOpacity>
           </View>
-        </View>
+        </KeyboardAvoidingView>
       );
     }
   }

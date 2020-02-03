@@ -9,14 +9,14 @@ const retrieveData = async (key) => {
   return value
 };
 
-function genericGet(baseroute, subroute, query='') {
+function genericGet(baseroute, subroute, query='', silent=false) {
   const fetchArgs = {
     method: 'GET',
   }
-  return genericRequest(fetchArgs, baseroute, subroute, query)
+  return genericRequest(fetchArgs, baseroute, subroute, query, silent)
 }
 
-function genericPost(baseroute, subroute, body='') {
+function genericPost(baseroute, subroute, body='', silent=false) {
   const fetchArgs = {
     method: 'POST',
     headers: {
@@ -24,10 +24,10 @@ function genericPost(baseroute, subroute, body='') {
     },
     body: body
   }
-  return genericRequest(fetchArgs, baseroute, subroute)
+  return genericRequest(fetchArgs, baseroute, subroute, '', silent)
 }
 
-function genericRequest(fetchArgs, baseroute, subroute, query='') {
+function genericRequest(fetchArgs, baseroute, subroute, query='', silent) {
   //controller is used to abort as a timeout
   let controller = new AbortController();
   const timeout = 10 //seconds
@@ -55,10 +55,14 @@ function genericRequest(fetchArgs, baseroute, subroute, query='') {
           var errorText
           errorText  = "Error: "+ responseText
           errorText += " (status code " + response.status + ")"
+          if (response.status === 403) {
+            errorText += "\nYour credentials may have expired, try logging in again.";
+          }
           throw new Error (errorText)
         })
     }
   }).catch((e) => {
+    if (!silent) {
     var errorText
     if ((e.message == "Network request failed") || (e.message == "Aborted")) {
       errorText = "Failed to connect to server within the time limit."
@@ -72,6 +76,7 @@ function genericRequest(fetchArgs, baseroute, subroute, query='') {
       errorText = e.message
     }
     alert(errorText)
+  }
   })
 }
 

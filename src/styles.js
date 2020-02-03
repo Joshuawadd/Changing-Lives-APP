@@ -15,6 +15,7 @@ export default StyleSheet.create({
     buttoncontainer: {
       flexGrow: 1,
       backgroundColor: '#FFF',
+      //backgroundColor: '#FF0',
       width: '80%',
       justifyContent: 'space-evenly',
     },
@@ -46,8 +47,13 @@ export default StyleSheet.create({
   
     // "full"-width images
     image: {
+      backgroundColor: '#FFF',
+      //backgroundColor: '#F00',
       width: '80%',
+      //padding: '5%',
+      margin: '5%',
       resizeMode: 'contain',
+      flex: 1,
     },
   
     // text information
