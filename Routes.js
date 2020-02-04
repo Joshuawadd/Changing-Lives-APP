@@ -10,7 +10,8 @@ import SectionsScreen from "./src/screens/SectionsScreen";
 import FilesScreen from "./src/screens/FilesScreen";
 
 import ForumScreen from "./src/screens/ForumScreen";
-import TopicScreen from "./src/screens/TopicScreen";
+import TopicViewScreen from "./src/screens/TopicViewScreen";
+import TopicCreateScreen from "./src/screens/TopicViewScreen";
 
 import ButtonListTestScreen from "./src/screens/ButtonListTestScreen";
 
@@ -21,7 +22,8 @@ const AppNavigator = createStackNavigator(
       Sections: SectionsScreen,
       Files: FilesScreen,
       Forum: ForumScreen,
-      Topic: TopicScreen,
+      TopicView: TopicViewScreen,
+      TopicCreate: TopicCreateScreen,
       Settings: SettingsScreen,
       
       ButtonListTest: ButtonListTestScreen,

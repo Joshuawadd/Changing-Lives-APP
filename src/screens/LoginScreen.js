@@ -11,15 +11,17 @@ export default class LoginScreen extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
-        username: '',
-        password: '',
+        username: 'CLStaff',
+        password: 'admin',
       };
     }
   
     static navigationOptions = {
-      title: 'User Login',
+      title: 'Login',
       headerLeft: null,
       gesturesEnabled: false,
+      headerStyle: styles.header,
+      headerTitleStyle: styles.headerTitle,
     };
 
     componentDidMount() {
@@ -33,23 +35,23 @@ export default class LoginScreen extends React.Component {
     }
   
     render() {
-      //textinput cursor jumps to end: https://github.com/facebook/react-native/issues/27658
+      //textInput cursor jumps to end: https://github.com/facebook/react-native/issues/27658
       //keyboardavoidingview needs work
       return (
         <KeyboardAvoidingView
           style={styles.container} behavior="padding" >
             
           <Image source={require('../assets/logo.png')} style={styles.image} />
-          <View style={[styles.buttoncontainer]}>
+          <View style={[styles.buttonContainer]}>
             
             <TextInput
-              style={[styles.button, styles.textinput]}
+              style={[styles.button, styles.textInput]}
               placeholder="Username"
               onChangeText={(username) => this.setState({ username })}
               value={this.state.username}
             />
             <TextInput
-              style={[styles.button, styles.textinput]}
+              style={[styles.button, styles.textInput]}
               secureTextEntry={true}
               placeholder="Password"
               onChangeText={(password) => this.setState({ password })}
@@ -68,7 +70,7 @@ export default class LoginScreen extends React.Component {
                   this.props.navigation.navigate('Home');
                 }
               }}>
-              <Text style={styles.buttontext}>Login</Text>
+              <Text style={styles.buttonText}>Login</Text>
             </TouchableOpacity>
           </View>
         </KeyboardAvoidingView>

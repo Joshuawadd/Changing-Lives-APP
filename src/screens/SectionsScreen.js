@@ -15,6 +15,8 @@ export default class SectionsScreen extends React.Component {
   
     static navigationOptions = {
       title: 'Resources',
+      headerStyle: styles.header,
+      headerTitleStyle: styles.headerTitle,
     };
   
     componentDidMount(){
@@ -42,9 +44,9 @@ export default class SectionsScreen extends React.Component {
   
       return(
         <View style={styles.container}>
-          <Text style={styles.infotext}>Select a section to view its resources.</Text>
+          <Text style={styles.infoText}>Select a section to view its resources.</Text>
           <ButtonList
-            style={styles.buttoncontainer}
+            style={styles.buttonContainer}
             data={this.state.dataSource}
             onPress={ (item) => {
               this.props.navigation.navigate('Files', item)

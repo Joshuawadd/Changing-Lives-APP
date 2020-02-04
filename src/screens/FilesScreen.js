@@ -16,13 +16,15 @@ export default class FilesScreen extends React.Component {
   
     static navigationOptions = ({ navigation }) => ({
       title: `${navigation.state.params.name}`,
+      headerStyle: styles.header,
+      headerTitleStyle: styles.headerTitle,
     });
   
     render() {
   
       return (
         <View style={styles.container}>
-          <Text style={styles.infotext}>{this.sectionInfo.text}</Text>
+          <Text style={styles.infoText}>{this.sectionInfo.text}</Text>
           <ButtonList
             data={this.sectionInfo.files}
             onPress={ 

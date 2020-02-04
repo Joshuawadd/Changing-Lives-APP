@@ -13,7 +13,9 @@ export default class HomeScreen extends React.Component {
     }
   
     static navigationOptions = {
-      title: 'Main Menu',
+      title: 'Home',
+      headerStyle: styles.header,
+      headerTitleStyle: styles.headerTitle,
     };
     
     componentDidMount() {
@@ -40,7 +42,9 @@ export default class HomeScreen extends React.Component {
         <View style={styles.container}>
           <Image source={require('../assets/logo.png')} style={styles.image} />
           <ButtonList
-            style = {styles.buttoncontainer}
+            //style={{
+              //container: styles.topicContainer,
+            //}}
             data = {[
               {
                 title: 'Resources',
