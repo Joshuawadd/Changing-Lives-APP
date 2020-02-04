@@ -34,7 +34,6 @@ export default class LoginScreen extends React.Component {
 
   render () {
     // textInput cursor jumps to end: https://github.com/facebook/react-native/issues/27658
-    // keyboardavoidingview needs work
     return (
       <KeyboardAvoidingView
         style={styles.container} behavior="padding" >

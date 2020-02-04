@@ -80,7 +80,7 @@ export default class ForumScreen extends React.Component {
           style={{
             container: styles.topicContainer,
             button: styles.topicButton,
-            titleText: styles.topicText,
+            titleText: styles.topicButtonText,
             subtitleText: styles.subtitleText
           }}
           data={this.state.dataSource}

@@ -20,7 +20,7 @@ export default StyleSheet.create({
     alignItems: 'center'
   },
 
-  // contains multiple buttons or button-like elements
+  // contains multiple buttons or button-shaped elements
   buttonContainer: {
     flexGrow: 1,
     backgroundColor: colors.white,
@@ -44,6 +44,12 @@ export default StyleSheet.create({
     width: '100%'
   },
 
+  parentTitle: {
+    fontFamily: 'Geogtq-SmBd',
+    fontSize: 24,
+    alignSelf: 'flex-start'
+  },
+
   topicButton: {
     padding: '5%',
     backgroundColor: colors.blue,
@@ -53,7 +59,7 @@ export default StyleSheet.create({
     borderRadius: 0
   },
 
-  topicText: {
+  topicButtonText: {
     fontFamily: 'Geogtq-SmBd',
     fontSize: 24,
     textTransform: 'uppercase',

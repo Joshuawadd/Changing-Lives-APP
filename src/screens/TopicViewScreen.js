@@ -56,7 +56,7 @@ export default class TopicViewScreen extends React.Component {
   render () {
     return (
       <View style={styles.container}>
-        <Text>{this.topicInfo.parentTitle}</Text>
+        <Text style={styles.parentTitle}>{this.topicInfo.parentTitle}</Text>
         <Text>{this.topicInfo.parentDateTime}</Text>
         <Text>{this.topicInfo.parentComment}</Text>
         <FlatList
