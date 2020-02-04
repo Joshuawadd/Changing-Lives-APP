@@ -3,30 +3,25 @@ import { TouchableOpacity, Text, FlatList } from 'react-native';
 import styles from '../styles';
 
 class Subtitle extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
+  render () {
     if (this.props.text) {
-      return <Text numberOfLines={this.props.numberOfLines} style={this.props.style}>{this.props.text}</Text>
+      return <Text numberOfLines={this.props.numberOfLines} style={this.props.style}>{this.props.text}</Text>;
     } else {
-      return null
+      return null;
     }
   }
-
 }
 // reusable button list component
 export default class ButtonList extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
-    if (typeof this.props.titleKey === "undefined") {
-      this.titleKey = "title";
+    if (typeof this.props.titleKey === 'undefined') {
+      this.titleKey = 'title';
     } else {
       this.titleKey = this.props.titleKey;
     }
-    if (typeof this.props.titleKey === "undefined") {
-      this.subtitleKey = "subtitle";
+    if (typeof this.props.titleKey === 'undefined') {
+      this.subtitleKey = 'subtitle';
     } else {
       this.subtitleKey = this.props.subtitleKey;
     }
@@ -34,15 +29,13 @@ export default class ButtonList extends React.Component {
 
   // see https://stackoverflow.com/a/2631198 for ?. notation
 
-  render() {
-
-
-    if (typeof (this.props.style?.container) !== 'undefined') { //if container style has been specified
-      if (!("width" in this.props.style.container)) {//if width has not been specified
+  render () {
+    if (typeof (this.props.style?.container) !== 'undefined') { // if container style has been specified
+      if (!('width' in this.props.style.container)) { // if width has not been specified
         this.width = styles.buttonContainer.width;
         this.containerStyle = this.props.style.container;
-      } else { //if width has been specified
-        const { width, ...containerStyle } = this.props.style.container
+      } else { // if width has been specified
+        const { width, ...containerStyle } = this.props.style.container;
         this.width = width;
         this.containerStyle = containerStyle;
       }
@@ -69,6 +62,6 @@ export default class ButtonList extends React.Component {
         )}
         keyExtractor={(item, index) => index.toString()}
       />
-    )
+    );
   }
 }

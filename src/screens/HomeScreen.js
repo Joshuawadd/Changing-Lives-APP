@@ -5,59 +5,53 @@ import styles from '../styles';
 import { retrieveData, genericGet } from '../utils';
 import ButtonList from '../components/ButtonList';
 
-
-
 export default class HomeScreen extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   static navigationOptions = {
     title: 'Home',
     headerStyle: styles.header,
-    headerTitleStyle: styles.headerTitle,
+    headerTitleStyle: styles.headerTitle
   };
 
-  componentDidMount() {
+  componentDidMount () {
     this.focusListener = this.props.navigation.addListener('didFocus', () => {
       retrieveData('authToken').then((authToken) => {
-        var api_subroute = "/api/users/login/silent"
-        var api_query = `?token=${authToken}`
-        genericGet(API_BASEROUTE, api_subroute, api_query, true).then((response) => {
+        var apiSubroute = '/api/users/login/silent';
+        var apiQuery = `?token=${authToken}`;
+        genericGet(API_BASEROUTE, apiSubroute, apiQuery, true).then((response) => {
           if (response !== 'OK') {
-            this.props.navigation.navigate('Login')
+            this.props.navigation.navigate('Login');
           }
         });
       });
     });
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     // Remove the event listener
     this.focusListener.remove();
   }
 
-  render() {
+  render () {
     return (
       <View style={styles.container}>
         <Image source={require('../assets/logo.png')} style={styles.image} />
         <ButtonList
-          //style={{
-          //container: styles.topicContainer,
-          //}}
+          // style={{
+          // container: styles.topicContainer,
+          // }}
           data={[
             {
               title: 'Resources',
-              target: 'Sections',
+              target: 'Sections'
             },
             {
               title: 'Forum',
-              target: 'Forum',
+              target: 'Forum'
             },
             {
               title: 'Settings',
-              target: 'Settings',
-            },
+              target: 'Settings'
+            }
           ]}
           onPress={(item) => this.props.navigation.navigate(item.target)}
         />

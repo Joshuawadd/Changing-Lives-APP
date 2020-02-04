@@ -7,21 +7,18 @@ import ButtonList from '../components/ButtonList';
 import styles from '../styles';
 
 export default class FilesScreen extends React.Component {
-
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.sectionInfo = this.props.navigation.state.params;
   }
 
-
   static navigationOptions = ({ navigation }) => ({
     title: `${navigation.state.params.name}`,
     headerStyle: styles.header,
-    headerTitleStyle: styles.headerTitle,
+    headerTitleStyle: styles.headerTitle
   });
 
-  render() {
-
+  render () {
     return (
       <View style={styles.container}>
         <Text style={styles.infoText}>{this.sectionInfo.text}</Text>
@@ -29,10 +26,9 @@ export default class FilesScreen extends React.Component {
           data={this.sectionInfo.files}
           onPress={
             (item) => {
-              retrieveData("authToken").then((authToken) => {
-                Linking.openURL(`${API_BASEROUTE}/files/${item.path}?token=${authToken}`)
-              })
-
+              retrieveData('authToken').then((authToken) => {
+                Linking.openURL(`${API_BASEROUTE}/files/${item.path}?token=${authToken}`);
+              });
             }
 
           }
