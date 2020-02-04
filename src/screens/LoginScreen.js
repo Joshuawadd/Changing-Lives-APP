@@ -5,14 +5,12 @@ import { API_BASEROUTE } from 'react-native-dotenv';
 import { genericPost, storeData } from '../utils.js';
 import styles from '../styles';
 
-
-
 export default class LoginScreen extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {
       username: 'CLStaff',
-      password: 'admin',
+      password: 'admin'
     };
   }
 
@@ -21,28 +19,28 @@ export default class LoginScreen extends React.Component {
     headerLeft: null,
     gesturesEnabled: false,
     headerStyle: styles.header,
-    headerTitleStyle: styles.headerTitle,
+    headerTitleStyle: styles.headerTitle
   };
 
-  componentDidMount() {
+  componentDidMount () {
     // temporarily disable back button
-    this.backHandler = BackHandler.addEventListener('hardwareBackPress', function () { return true })
+    this.backHandler = BackHandler.addEventListener('hardwareBackPress', function () { return true; });
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     // stop disabling back button
-    this.backHandler.remove()
+    this.backHandler.remove();
   }
 
-  render() {
-    //textInput cursor jumps to end: https://github.com/facebook/react-native/issues/27658
-    //keyboardavoidingview needs work
+  render () {
+    // textInput cursor jumps to end: https://github.com/facebook/react-native/issues/27658
+    // keyboardavoidingview needs work
     return (
       <KeyboardAvoidingView
         style={styles.container} behavior="padding" >
 
         <Image source={require('../assets/logo.png')} style={styles.image} />
-        <View style={[styles.buttonContainer]}>
+        <View style={styles.buttonContainer}>
 
           <TextInput
             style={[styles.button, styles.textInput]}
@@ -60,13 +58,13 @@ export default class LoginScreen extends React.Component {
           <TouchableOpacity
             style={styles.button}
             onPress={async () => {
-              const api_subroute = "/api/users/login"
-              let uname = this.state.username;
-              let pass = this.state.password;
-              let body = `userName=${uname}&userPassword=${pass}`;
-              let postResponse = await genericPost(API_BASEROUTE, api_subroute, body);
+              const apiSubroute = '/api/users/login';
+              const uname = this.state.username;
+              const pass = this.state.password;
+              const body = `userName=${uname}&userPassword=${pass}`;
+              const postResponse = await genericPost(API_BASEROUTE, apiSubroute, body);
               if (typeof (postResponse) !== 'undefined') {
-                storeData('authToken', postResponse)
+                storeData('authToken', postResponse);
                 this.props.navigation.navigate('Home');
               }
             }}>

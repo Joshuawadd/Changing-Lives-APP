@@ -1,17 +1,18 @@
 import React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
 import styles from '../styles';
+import colors from '../colors';
 import { FlatList } from 'react-native-gesture-handler';
 
 const roles = StyleSheet.create({
   creator: {
-    backgroundColor: '#0F0',
+    backgroundColor: colors.rouge,
   },
   staff: {
-    backgroundColor: '#00F',
+    backgroundColor: colors.pink,
   },
   other: {
-    backgroundColor: '#F00',
+    backgroundColor: colors.blue,
   },
 })
 
@@ -25,14 +26,14 @@ export default class TopicViewScreen extends React.Component {
         childId: 5,
         childComment: "Have you considered doing this?",
         childDateTime: "3AM",
-        childRole: "creator"
+        childRole: "other"
       },
       {
         parentId: 3,
         childId: 7,
         childComment: "Yes I have",
         childDateTime: "4AM",
-        childRole: "other"
+        childRole: "creator"
       },
       {
         parentId: 3,

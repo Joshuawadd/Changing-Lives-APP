@@ -94,7 +94,7 @@ export default class ForumScreen extends React.Component {
           }}
           data={this.state.dataSource}
           onPress={(item) => {
-            //this.props.navigation.navigate('TopicView', item)
+            this.props.navigation.navigate('TopicView', item)
           }}
           titleKey="parentTitle"
           subtitleKey="parentComment"
