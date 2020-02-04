@@ -9,6 +9,7 @@
         "node": true,
         "react-native/react-native": true
     },
+    "parser": "babel-eslint",
     "extends": [
         "plugin:react/recommended",
         "standard"
