@@ -11,7 +11,7 @@ import FilesScreen from "./src/screens/FilesScreen";
 
 import ForumScreen from "./src/screens/ForumScreen";
 import TopicViewScreen from "./src/screens/TopicViewScreen";
-import TopicCreateScreen from "./src/screens/TopicViewScreen";
+import TopicCreateScreen from "./src/screens/TopicCreateScreen";
 
 import ButtonListTestScreen from "./src/screens/ButtonListTestScreen";
 

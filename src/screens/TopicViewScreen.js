@@ -15,7 +15,7 @@ const roles = StyleSheet.create({
   },
 })
 
-export default class TopicScreen extends React.Component { 
+export default class TopicViewScreen extends React.Component { 
   constructor(props) {
     super(props);
     this.topicInfo = this.props.navigation.state.params;
@@ -45,7 +45,7 @@ export default class TopicScreen extends React.Component {
   }
 
   static navigationOptions = {
-      title: 'Topic',
+      title: 'View Topic',
       headerStyle: styles.header,
       headerTitleStyle: styles.headerTitle,
     };

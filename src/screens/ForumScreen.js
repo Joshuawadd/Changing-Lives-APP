@@ -1,10 +1,11 @@
 import React from 'react';
-import { Image, StyleSheet, Text, View, TextInput, ActivityIndicator, TouchableOpacity, FlatList} from 'react-native';
+import { Button, Image, StyleSheet, Text, View, TextInput, ActivityIndicator, TouchableOpacity, FlatList, TouchableWithoutFeedback} from 'react-native';
 import { genericGet, genericPost } from '../utils.js';
 import { API_BASEROUTE } from 'react-native-dotenv';
 import ButtonList from '../components/ButtonList';
 import styles from '../styles';
 import { retrieveData } from '../utils';
+//import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 
 export default class ForumScreen extends React.Component {
@@ -12,19 +13,24 @@ export default class ForumScreen extends React.Component {
     super(props);
     this.state = { isLoading: true }
   }
-
-  static navigationOptions = {
+  
+  static navigationOptions = ({navigation}) => ({
     title: 'Forum',
     headerStyle: styles.header,
     headerTitleStyle: styles.headerTitle,
-  };
+    headerRight: () => (
+      <TouchableWithoutFeedback
+      onPress={()=>{ navigation.navigate('TopicCreate'); }}
+        >
+        <Text style={{ margin: 20, fontSize: 20}}>+</Text>
+      </TouchableWithoutFeedback>
+      )
+  });
   
   
+
   componentDidMount(){
 
-    //Font.loadAsync({
-//      'Geo': Geo,
-    //});
     /* UNCOMMENT ONCE API SIDE IS COMPLETE
     retrieveData('authToken').then((authToken) => {
     var api_subroute = "/api/forums/parent/list"
@@ -88,7 +94,7 @@ export default class ForumScreen extends React.Component {
             }}
             data={this.state.dataSource}
             onPress={ (item) => {
-              this.props.navigation.navigate('Topic', item)
+              //this.props.navigation.navigate('TopicView', item)
             }}
             titleKey = "parentTitle"
             subtitleKey = "parentComment"
