@@ -1,32 +1,31 @@
-//https://medium.com/better-programming/react-native-navigating-between-the-screens-and-code-structure-for-beginners-6b815ee8f79
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 
-import HomeScreen from "./src/screens/HomeScreen";
-import LoginScreen from "./src/screens/LoginScreen";
-import SettingsScreen from "./src/screens/SettingsScreen";
+//all screens must be imported here:
+import Home from "./src/screens/HomeScreen";
+import Login from "./src/screens/LoginScreen";
+import Settings from "./src/screens/SettingsScreen";
+import Sections from "./src/screens/SectionsScreen";
+import Files from "./src/screens/FilesScreen";
+import Forum from "./src/screens/ForumScreen";
+import TopicView from "./src/screens/TopicViewScreen";
+import TopicCreate from "./src/screens/TopicCreateScreen";
 
-import SectionsScreen from "./src/screens/SectionsScreen";
-import FilesScreen from "./src/screens/FilesScreen";
-
-import ForumScreen from "./src/screens/ForumScreen";
-import TopicViewScreen from "./src/screens/TopicViewScreen";
-import TopicCreateScreen from "./src/screens/TopicCreateScreen";
-
-import ButtonListTestScreen from "./src/screens/ButtonListTestScreen";
+//test screen:
+//import ButtonListTest from "./src/screens/ButtonListTestScreen";
 
 const AppNavigator = createStackNavigator(
   {
-    Login: LoginScreen,
-    Home: HomeScreen,
-    Sections: SectionsScreen,
-    Files: FilesScreen,
-    Forum: ForumScreen,
-    TopicView: TopicViewScreen,
-    TopicCreate: TopicCreateScreen,
-    Settings: SettingsScreen,
+    Login,
+    Home,
+    Sections,
+    Files,
+    Forum,
+    TopicView,
+    TopicCreate,
+    Settings,
 
-    ButtonListTest: ButtonListTestScreen,
+    //ButtonListTest,
   },
   {
     initialRouteName: 'Home'
