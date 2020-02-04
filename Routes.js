@@ -16,21 +16,21 @@ import TopicCreateScreen from "./src/screens/TopicCreateScreen";
 import ButtonListTestScreen from "./src/screens/ButtonListTestScreen";
 
 const AppNavigator = createStackNavigator(
-    {
-      Login: LoginScreen,
-      Home: HomeScreen,
-      Sections: SectionsScreen,
-      Files: FilesScreen,
-      Forum: ForumScreen,
-      TopicView: TopicViewScreen,
-      TopicCreate: TopicCreateScreen,
-      Settings: SettingsScreen,
-      
-      ButtonListTest: ButtonListTestScreen,
-    },
-    {
-      initialRouteName: 'Home'
-    }
+  {
+    Login: LoginScreen,
+    Home: HomeScreen,
+    Sections: SectionsScreen,
+    Files: FilesScreen,
+    Forum: ForumScreen,
+    TopicView: TopicViewScreen,
+    TopicCreate: TopicCreateScreen,
+    Settings: SettingsScreen,
+
+    ButtonListTest: ButtonListTestScreen,
+  },
+  {
+    initialRouteName: 'Home'
+  }
 );
 
 export default createAppContainer(AppNavigator);

@@ -15,7 +15,7 @@ const roles = StyleSheet.create({
   },
 })
 
-export default class TopicViewScreen extends React.Component { 
+export default class TopicViewScreen extends React.Component {
   constructor(props) {
     super(props);
     this.topicInfo = this.props.navigation.state.params;
@@ -45,27 +45,27 @@ export default class TopicViewScreen extends React.Component {
   }
 
   static navigationOptions = {
-      title: 'View Topic',
-      headerStyle: styles.header,
-      headerTitleStyle: styles.headerTitle,
-    };
+    title: 'View Topic',
+    headerStyle: styles.header,
+    headerTitleStyle: styles.headerTitle,
+  };
 
-    render() {
-      return (
-        <View style={styles.container}>
-          <Text>{this.topicInfo.parentTitle}</Text>
-          <Text>{this.topicInfo.parentDateTime}</Text>
-          <Text>{this.topicInfo.parentComment}</Text>
-          <FlatList
-            data = {this.topicInfo.children}
-            renderItem={({item}) => (
-              <View style={roles[item.childRole]}>
-                <Text>{item.childComment}</Text>
-              </View>
-            )}
-            keyExtractor={(item, index) => index.toString()}
-          />
-        </View>
-        );
-    }
+  render() {
+    return (
+      <View style={styles.container}>
+        <Text>{this.topicInfo.parentTitle}</Text>
+        <Text>{this.topicInfo.parentDateTime}</Text>
+        <Text>{this.topicInfo.parentComment}</Text>
+        <FlatList
+          data={this.topicInfo.children}
+          renderItem={({ item }) => (
+            <View style={roles[item.childRole]}>
+              <Text>{item.childComment}</Text>
+            </View>
+          )}
+          keyExtractor={(item, index) => index.toString()}
+        />
+      </View>
+    );
+  }
 }
