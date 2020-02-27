@@ -25,43 +25,16 @@ export default class ForumScreen extends React.Component {
   });
 
   componentDidMount () {
-    /* UNCOMMENT ONCE API SIDE IS COMPLETE
     retrieveData('authToken').then((authToken) => {
-    var apiSubroute = "/api/forums/parent/list"
-    var apiQuery = `?token=${authToken}`
-    genericGet(API_BASEROUTE, apiSubroute, apiQuery).then((responseJson) => {
-      this.setState({
-        isLoading: false,
-        dataSource: responseJson,
-      }, function(){});
-    })
-  }) */
-    this.setState({
-      isLoading: false,
-      // also show datetime
-      dataSource: [
-        {
-          parentId: 3,
-          parentTitle: 'CV Help',
-          parentComment: 'Hi everyone, do you have any tips on what to put in my CV?'
-        },
-        {
-          parentId: 4,
-          parentTitle: '32 Character Title AAAAAAAAAAAAA',
-          parentComment: 'This is a really long post. AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
-        },
-        {
-          parentId: 5,
-          parentTitle: '32_Character_Title_AAAAAAAAAAAAA',
-          parentComment: 'This is a really long post. AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
-        },
-        {
-          parentId: 6,
-          parentTitle: 'W'.repeat(14),
-          parentComment: 'This is a really long post. AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
-        }
-      ]
-    }, function () { });
+      var apiSubroute = '/api/forums/parent/list';
+      var apiQuery = `?token=${authToken}`;
+      genericGet(API_BASEROUTE, apiSubroute, apiQuery).then((responseJson) => {
+        this.setState({
+          isLoading: false,
+          dataSource: responseJson
+        }, function () {});
+      });
+    });
   }
 
   render () {
@@ -85,10 +58,16 @@ export default class ForumScreen extends React.Component {
           }}
           data={this.state.dataSource}
           onPress={(item) => {
-            this.props.navigation.navigate('TopicView', item);
+            retrieveData('authToken').then((authToken) => {
+              var apiSubroute = '/api/forums/child/list';
+              var apiQuery = `?token=${authToken}&parentId=${item.parent_id}`;
+              genericGet(API_BASEROUTE, apiSubroute, apiQuery).then((responseJson) => {
+                this.props.navigation.navigate('TopicView', { parent: item, children: responseJson });
+              });
+            });
           }}
-          titleKey="parentTitle"
-          subtitleKey="parentComment"
+          titleKey="parent_title"
+          subtitleKey="parent_comment"
         />
       </View>
     );

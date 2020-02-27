@@ -12,8 +12,11 @@ const roles = StyleSheet.create({
   staff: {
     backgroundColor: colors.pink
   },
-  other: {
+  user: {
     backgroundColor: colors.blue
+  },
+  staffcreator: {
+    backgroundColor: colors.purple
   }
 });
 /* eslint-enable react-native/no-unused-styles */
@@ -22,29 +25,6 @@ export default class TopicViewScreen extends React.Component {
   constructor (props) {
     super(props);
     this.topicInfo = this.props.navigation.state.params;
-    this.topicInfo.children = [
-      {
-        parentId: 3,
-        childId: 5,
-        childComment: 'Have you considered doing this?',
-        childDateTime: '3AM',
-        childRole: 'other'
-      },
-      {
-        parentId: 3,
-        childId: 7,
-        childComment: 'Yes I have',
-        childDateTime: '4AM',
-        childRole: 'creator'
-      },
-      {
-        parentId: 3,
-        childId: 10,
-        childComment: 'How about this?',
-        childDateTime: '3AM',
-        childRole: 'staff'
-      }
-    ];
   }
 
   static navigationOptions = {
@@ -56,14 +36,14 @@ export default class TopicViewScreen extends React.Component {
   render () {
     return (
       <View style={styles.container}>
-        <Text style={styles.parentTitle}>{this.topicInfo.parentTitle}</Text>
-        <Text>{this.topicInfo.parentDateTime}</Text>
-        <Text>{this.topicInfo.parentComment}</Text>
+        <Text style={styles.parentTitle}>{this.topicInfo.parent.parent_title}</Text>
+
+        <Text>{this.topicInfo.parent.parent_comment}</Text>
         <FlatList
           data={this.topicInfo.children}
           renderItem={({ item }) => (
             <View style={roles[item.childRole]}>
-              <Text>{item.childComment}</Text>
+              <Text>{item.child_comment}</Text>
             </View>
           )}
           keyExtractor={(item, index) => index.toString()}
