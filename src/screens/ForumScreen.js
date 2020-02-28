@@ -41,7 +41,7 @@ export default class ForumScreen extends React.Component {
     });
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     this.willFocusSubscription.remove();
   }
 
@@ -66,13 +66,7 @@ export default class ForumScreen extends React.Component {
           }}
           data={this.state.dataSource}
           onPress={(item) => {
-            retrieveData('authToken').then((authToken) => {
-              var apiSubroute = '/api/forums/child/list';
-              var apiQuery = `?token=${authToken}&parentId=${item.parent_id}`;
-              genericGet(API_BASEROUTE, apiSubroute, apiQuery).then((responseJson) => {
-                this.props.navigation.navigate('TopicView', { parent: item, children: responseJson });
-              });
-            });
+            this.props.navigation.navigate('TopicView', item);
           }}
           titleKey="parent_title"
           subtitleKey="parent_comment"
