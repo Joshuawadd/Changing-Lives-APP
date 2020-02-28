@@ -25,6 +25,10 @@ export default class ForumScreen extends React.Component {
   });
 
   componentDidMount () {
+    this.willFocusSubscription = this.props.navigation.addListener('willFocus', this._willFocus);
+  }
+
+  _willFocus = () => {
     retrieveData('authToken').then((authToken) => {
       var apiSubroute = '/api/forums/parent/list';
       var apiQuery = `?token=${authToken}`;
@@ -35,6 +39,10 @@ export default class ForumScreen extends React.Component {
         }, function () {});
       });
     });
+  }
+
+  componentWillUnmount() {
+    this.willFocusSubscription.remove();
   }
 
   render () {
