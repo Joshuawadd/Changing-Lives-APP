@@ -42,8 +42,8 @@ export default class TopicViewScreen extends React.Component {
     retrieveData('authToken').then((authToken) => {
       var apiSubroute = '/api/forums/child/list';
       var apiQuery = `?token=${authToken}&parentId=${parentId}`;
-      genericGet(API_BASEROUTE, apiSubroute, apiQuery).then((responseJson) => {
-        this.setState({ childInfo: responseJson, isLoading: false });
+      genericGet(API_BASEROUTE, apiSubroute, apiQuery).then((response) => {
+        this.setState({ childInfo: response.content, isLoading: false });
       });
     });
   }
@@ -96,8 +96,8 @@ export default class TopicViewScreen extends React.Component {
               retrieveData('authToken').then((authToken) => {
                 var apiSubroute = '/api/forums/child/create';
                 var body = `token=${authToken}&parentId=${this.state.parentId}&childComment=${this.state.childComment}`;
-                genericPost(API_BASEROUTE, apiSubroute, body).then((responseJson) => {
-                  if (typeof (responseJson) !== 'undefined') { // success
+                genericPost(API_BASEROUTE, apiSubroute, body).then((response) => {
+                  if (response.ok) { // success
                     this.setState({ childComment: '', willScroll: true });
                     this.getData(); // refresh
                   }

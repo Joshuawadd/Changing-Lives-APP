@@ -18,8 +18,11 @@ export default class HomeScreen extends React.Component {
         var apiSubroute = '/api/users/login/silent';
         var apiQuery = `?token=${authToken}`;
         genericGet(API_BASEROUTE, apiSubroute, apiQuery, true).then((response) => {
-          if (response !== 'OK') {
-            this.props.navigation.navigate('Login');
+          //console.log(response)
+          if (response.content !== 'OK') {
+            if (response.status === 403) {
+              this.props.navigation.navigate('Login');
+            }
           }
         });
       });

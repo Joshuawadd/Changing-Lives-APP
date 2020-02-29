@@ -55,8 +55,8 @@ export default class TopicCreateScreen extends React.Component {
               retrieveData('authToken').then((authToken) => {
                 var apiSubroute = '/api/forums/parent/create';
                 var body = `token=${authToken}&parentTitle=${this.state.parentTitle}&parentComment=${this.state.parentComment}`;
-                genericPost(API_BASEROUTE, apiSubroute, body).then((responseJson) => {
-                  if (typeof (responseJson) !== 'undefined') { // success
+                genericPost(API_BASEROUTE, apiSubroute, body).then((response) => {
+                  if (response.ok) { // success
                     alert('Post successful!');
                     this.props.navigation.goBack();
                   }
