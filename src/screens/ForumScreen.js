@@ -32,11 +32,15 @@ export default class ForumScreen extends React.Component {
     retrieveData('authToken').then((authToken) => {
       var apiSubroute = '/api/forums/parent/list';
       var apiQuery = `?token=${authToken}`;
-      genericGet(API_BASEROUTE, apiSubroute, apiQuery).then((responseJson) => {
-        this.setState({
-          isLoading: false,
-          dataSource: responseJson
-        }, function () {});
+      genericGet(API_BASEROUTE, apiSubroute, apiQuery).then((response) => {
+        if (response.ok) {
+          this.setState({
+            isLoading: false,
+            dataSource: response.content
+          }, function () {});
+        } else {
+          this.props.navigation.goBack();
+        }
       });
     });
   }
@@ -64,7 +68,7 @@ export default class ForumScreen extends React.Component {
             titleText: styles.topicButtonText,
             subtitleText: styles.subtitleText
           }}
-          data={this.state.dataSource}
+          data={this.state.dataSource.reverse()}
           onPress={(item) => {
             this.props.navigation.navigate('TopicView', item);
           }}

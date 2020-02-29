@@ -24,12 +24,15 @@ export default StyleSheet.create({
   buttonContainer: {
     flexGrow: 1,
     backgroundColor: colors.white,
-    width: '80%',
+    width: '100%',
     justifyContent: 'space-evenly'
+    // alignItems: 'center'
   },
 
   // button element (also used as base for stacking text input style onto)
   button: {
+    alignSelf: 'center',
+    width: '80%',
     padding: '5%',
     backgroundColor: colors.blue,
     alignItems: 'center',
@@ -51,6 +54,7 @@ export default StyleSheet.create({
   },
 
   topicButton: {
+    width: '100%',
     padding: '5%',
     backgroundColor: colors.blue,
     alignItems: 'flex-start',

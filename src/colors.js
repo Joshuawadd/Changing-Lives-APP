@@ -6,5 +6,6 @@ export default {
   rouge: '#983794',
   purple: '#663695',
   dkGrey: '#58595B',
-  mdGrey: '#808285'
+  mdGrey: '#808285',
+  ltGrey: '#D8DBE0'
 };

@@ -1,7 +1,7 @@
 import React from 'react';
-import { TouchableOpacity, Text, FlatList } from 'react-native';
+import { View, TouchableOpacity, Text, FlatList, TouchableWithoutFeedback } from 'react-native';
 import styles from '../styles';
-
+import colors from '../colors';
 class Subtitle extends React.Component {
   render () {
     if (this.props.text) {
@@ -50,16 +50,30 @@ export default class ButtonList extends React.Component {
         style={{ width: this.width }}
         contentContainerStyle={[this.containerStyle, this.props.style?.container]}
         data={this.props.data}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            delayPressIn={50}
-            style={[styles.button, this.props.style?.button]}
-            onPress={() => this.props.onPress(item)}
-          >
-            <Text numberOfLines={1} style={[styles.buttonText, this.props.style?.titleText]}>{item[this.titleKey]}</Text>
-            <Subtitle numberOfLines={1} style={this.props.style?.subtitleText} text={item[this.subtitleKey]}></Subtitle>
-          </TouchableOpacity>
-        )}
+
+        renderItem={({ item, index }) =>
+          <View>
+            {item.disabled === true
+              ? <TouchableOpacity
+                style={[styles.button, this.props.style?.button, { backgroundColor: colors.ltGrey }]}
+                delayPressIn={50}
+                onPress={() => this.props.onPress(item)}
+              >
+                <Text numberOfLines={1} style={[styles.buttonText, this.props.style?.titleText]}>{item[this.titleKey]}</Text>
+                <Subtitle numberOfLines={1} style={this.props.style?.subtitleText} text={item[this.subtitleKey]}></Subtitle>
+              </TouchableOpacity>
+              : <TouchableOpacity
+                delayPressIn={50}
+                style={[styles.button, this.props.style?.button]}
+                onPress={() => this.props.onPress(item)}
+              >
+                <Text numberOfLines={1} style={[styles.buttonText, this.props.style?.titleText]}>{item[this.titleKey]}</Text>
+                <Subtitle numberOfLines={1} style={this.props.style?.subtitleText} text={item[this.subtitleKey]}></Subtitle>
+              </TouchableOpacity>
+            }
+          </View>
+        }
+
         keyExtractor={(item, index) => index.toString()}
       />
     );
