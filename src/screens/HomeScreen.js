@@ -1,11 +1,19 @@
 import React from 'react';
-import { Image, View } from 'react-native';
+import { Alert, ActivityIndicator, Image, View } from 'react-native';
 import { API_BASEROUTE } from 'react-native-dotenv';
 import styles from '../styles';
-import { retrieveData, genericGet } from '../utils';
+import { retrieveData, genericGet, storeData } from '../utils';
 import ButtonList from '../components/ButtonList';
 
 export default class HomeScreen extends React.Component {
+  constructor (props) {
+    super(props);
+    this.state = {
+      isLoading: false,
+      offlineModeEnabled: true
+    };
+  };
+
   static navigationOptions = {
     title: 'Home',
     headerStyle: styles.header,
@@ -14,17 +22,54 @@ export default class HomeScreen extends React.Component {
 
   componentDidMount () {
     this.focusListener = this.props.navigation.addListener('didFocus', () => {
-      retrieveData('authToken').then((authToken) => {
-        var apiSubroute = '/api/users/login/silent';
-        var apiQuery = `?token=${authToken}`;
-        genericGet(API_BASEROUTE, apiSubroute, apiQuery, true).then((response) => {
-          //console.log(response)
-          if (response.content !== 'OK') {
-            if (response.status === 403) {
-              this.props.navigation.navigate('Login');
-            }
-          }
-        });
+      retrieveData('offlineModeEnabled').then((offlineModeEnabled) => {
+        if (offlineModeEnabled === null) {
+          storeData('offlineModeEnabled', JSON.stringify(false));
+          this.setState({ offlineModeEnabled: false });
+        } else {
+          this.setState({ offlineModeEnabled: JSON.parse(offlineModeEnabled) });
+        }
+
+        if (this.state.offlineModeEnabled === true) {
+          this.setState({ isLoading: false });
+        } else {
+          this.setState({ isLoading: true });
+          retrieveData('authToken').then((authToken) => {
+            var apiSubroute = '/api/users/login/silent';
+            var apiQuery = `?token=${authToken}`;
+            genericGet(API_BASEROUTE, apiSubroute, apiQuery, true).then((response) => {
+              if (response.ok) {
+                this.setState({ isLoading: false });
+              } else {
+                if (response.status === 403) {
+                  this.props.navigation.navigate('Login');
+                } else {
+                  Alert.alert(
+                    'Error',
+                    response.content,
+                    [
+                      {
+                        text: 'Continue offline',
+                        // onPress: () => console.log('Cancel Pressed'),
+                        style: 'cancel',
+                        onPress: () => {
+                          storeData('offlineModeEnabled', JSON.stringify(true));
+                          this.setState({ offlineModeEnabled: true });
+                          this.setState({ isLoading: false });
+                        }
+                      },
+                      {
+                        text: 'Retry',
+                        onPress: () => { this.props.navigation.navigate('Login'); }
+                      }
+                    ],
+                    { cancelable: false }
+                  );
+                }
+              }
+            });
+          });
+        }
       });
     });
   }
@@ -35,6 +80,14 @@ export default class HomeScreen extends React.Component {
   }
 
   render () {
+    if (this.state.isLoading) {
+      return (
+        <View style={{ flex: 1, padding: 20 }}>
+          <ActivityIndicator />
+        </View>
+      );
+    }
+
     return (
       <View style={styles.container}>
         <Image source={require('../assets/logo.png')} style={styles.image} />
@@ -49,14 +102,21 @@ export default class HomeScreen extends React.Component {
             },
             {
               title: 'Forum',
-              target: 'Forum'
+              target: 'Forum',
+              disabled: this.state.offlineModeEnabled
             },
             {
               title: 'Settings',
               target: 'Settings'
             }
           ]}
-          onPress={(item) => this.props.navigation.navigate(item.target)}
+          onPress={(item) => {
+            if (item.disabled) {
+              alert('Cannot access while offline mode is enabled (visit Settings to turn it off).');
+            } else {
+              this.props.navigation.navigate(item.target);
+            }
+          }}
         />
       </View>
     );

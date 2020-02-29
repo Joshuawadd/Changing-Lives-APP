@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, ActivityIndicator } from 'react-native';
+import { Alert, Text, View, ActivityIndicator } from 'react-native';
 import { genericGet, retrieveData, storeData } from '../utils.js';
 import { API_BASEROUTE } from 'react-native-dotenv';
 import ButtonList from '../components/ButtonList';
@@ -18,35 +18,65 @@ export default class SectionsScreen extends React.Component {
   };
 
   componentDidMount () {
-    retrieveData('authToken').then((authToken) => {
-      var apiSubroute = '/api/sections/list';
-      var apiQuery = `?token=${authToken}`;
-      genericGet(API_BASEROUTE, apiSubroute, apiQuery, true).then((response) => {
-        // alert(response.ok);
-        if (response.ok) {
-          storeData('sectionData', JSON.stringify(response.content));
+    retrieveData('offlineModeEnabled').then((offlineModeEnabled) => {
+      if (JSON.parse(offlineModeEnabled) === true) {
+        retrieveData('sectionData').then((sectionData) => {
           this.setState({
             isLoading: false,
-            dataSource: response.content,
-            showButtons: true
+            dataSource: JSON.parse(sectionData),
+            showButtons: false
           }, function () { });
-        } else {
-          if (response.status === 403) {
-            alert(response.content);
-            this.props.navigation.goBack();
-          } else {
-            retrieveData('sectionData').then((sectionData) => {
+        });
+      } else {
+        retrieveData('authToken').then((authToken) => {
+          var apiSubroute = '/api/sections/list';
+          var apiQuery = `?token=${authToken}`;
+          genericGet(API_BASEROUTE, apiSubroute, apiQuery, true).then((response) => {
+            // alert(response.ok);
+            if (response.ok) {
+              storeData('sectionData', JSON.stringify(response.content));
               this.setState({
                 isLoading: false,
-                dataSource: JSON.parse(sectionData),
-                showButtons: false
+                dataSource: response.content,
+                showButtons: true
               }, function () { });
-            });
-          }
-        }
-      });
+            } else {
+              if (response.status === 403) {
+                this.props.navigation.navigate('Login');
+              } else {
+                Alert.alert(
+                  'Error',
+                  response.content,
+                  [
+                    {
+                      text: 'Return',
+                      onPress: () => { this.props.navigation.goBack(); },
+                      style: 'cancel'
+                    },
+                    {
+                      text: 'Continue offline',
+                      onPress: () => {
+                        storeData('offlineModeEnabled', JSON.stringify(true));
+                        retrieveData('sectionData').then((sectionData) => {
+                          this.setState({
+                            offlineModeEnabled: true,
+                            isLoading: false,
+                            dataSource: JSON.parse(sectionData),
+                            showButtons: false
+                          }, function () { });
+                        });
+                      }
+                    }
+                  ],
+                  { cancelable: false }
+                );
+              }
+            }
+          });
+        });
+      };
     });
-  };
+  }
 
   render () {
     if (this.state.isLoading) {

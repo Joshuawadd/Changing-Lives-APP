@@ -28,7 +28,6 @@ function genericPost (baseroute, subroute, body = '', silent = false) {
 }
 
 function genericRequest (fetchArgs, baseroute, subroute, query = '', silent) {
-  // console.log("FETCHING")
   // controller is used to abort as a timeout
   // eslint-disable-next-line no-undef
   const controller = new AbortController();

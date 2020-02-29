@@ -5,7 +5,6 @@ import { Linking } from 'expo';
 import { API_BASEROUTE } from 'react-native-dotenv';
 import ButtonList from '../components/ButtonList';
 import styles from '../styles';
-import { ThemeColors } from 'react-navigation';
 
 export default class FilesScreen extends React.Component {
   constructor (props) {
@@ -23,10 +22,12 @@ export default class FilesScreen extends React.Component {
   });
 
   componentDidMount () {
-    if (!this.showButtons) {
+    if (!this.state.showButtons) {
       this.setState({ noFilesText: 'Go online to see files!' });
-    } else {
+    } else if (this.state.sectionInfo.files.length === 0) {
       this.setState({ noFilesText: 'This section has no files.' });
+    } else {
+      delete this.state.noFilesText;
     }
   }
 

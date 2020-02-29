@@ -68,7 +68,7 @@ export default class ForumScreen extends React.Component {
             titleText: styles.topicButtonText,
             subtitleText: styles.subtitleText
           }}
-          data={this.state.dataSource}
+          data={this.state.dataSource.reverse()}
           onPress={(item) => {
             this.props.navigation.navigate('TopicView', item);
           }}

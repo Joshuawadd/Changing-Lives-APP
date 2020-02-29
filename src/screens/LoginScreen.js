@@ -9,10 +9,8 @@ export default class LoginScreen extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
-      // username: 'CLStaff',
-      // password: 'admin'
-      username: 'jflg73',
-      password: 'Ia07Nfm!6@',
+      username: '',
+      password: '',
       loginButtonText: 'Login'
     };
   }
@@ -80,7 +78,10 @@ export default class LoginScreen extends React.Component {
                         text: 'Continue offline',
                         // onPress: () => console.log('Cancel Pressed'),
                         style: 'cancel',
-                        onPress: () => { this.props.navigation.goBack(); }
+                        onPress: () => {
+                          storeData('offlineModeEnabled', JSON.stringify(true));
+                          this.props.navigation.goBack();
+                        }
                       },
                       {
                         text: 'Retry',
