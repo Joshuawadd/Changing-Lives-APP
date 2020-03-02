@@ -27,7 +27,7 @@ At this point the app should be ready to test by running `npm start`. Run this c
     Alternatively, running the attached Python script should do this automatically.
 
 ## How to build the application
-1. In the _.env_ file, replace the `0.0.0.0` after `API_BASEROUTE` with the IP or web address that the server is program running on.
+1. In the _.env_ file, replace the `0.0.0.0:3000` after `API_BASEROUTE` with the IP and port, or web address, that the server program is running on.
 2. Follow Expo's instructions at <https://docs.expo.io/versions/latest/distribution/building-standalone-apps/>, but before running `expo build`, you must open another terminal window in this directory and run `npm start`.
 
 <br>
