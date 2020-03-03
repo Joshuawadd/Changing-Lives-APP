@@ -11,7 +11,7 @@ On your development machine:
 4. Globally install _expo-cli_ by running `npm install -g expo-cli`.
 5. Clone this repository onto your system and navigate to it.
 6. Run `npm install` to set up the node modules.
-7. In the _.env_ file, replace the `http://0.0.0.0:3000` after `API_BASEROUTE` with the IP or web address that the server is program running on. Every time this is changed, the cache must be cleared before testing. This is enabled by default; to disable it, change `"start": "expo start -c"` to `"start": "expo start"` to  in _package.json_. Note that it must be re-enabled every time the address is changed.
+7. In the _.env_ file, replace the `http://0.0.0.0:3000` after `API_BASEROUTE` with the IP or web address that the server is program running on. Every time this is changed, the cache must be cleared before testing. This is enabled by default; to disable it, change `"start": "expo start -c"` to `"start": "expo start"` in _package.json_. Note that it must be re-enabled every time the address is changed.
 
 At this point the app should be ready to test by running `npm start`. Run this command and follow the instructions in the terminal. If this crashes due to an invalid regular expression:
 
