@@ -11,11 +11,11 @@ On your development machine:
 4. Globally install _expo-cli_ by running `npm install -g expo-cli`.
 5. Clone this repository onto your system and navigate to it.
 6. Run `npm install` to set up the node modules.
-7. In the _.env_ file, replace the `0.0.0.0` after `API_BASEROUTE` with the IP or web address that the server is program running on. Every time this is changed, the cache must be cleared before testing; do this by adding changing `"start": "expo start"` to `"start": "expo start -c"` in _package.json_.
+7. In the _.env_ file, replace the `http://0.0.0.0:3000` after `API_BASEROUTE` with the IP or web address that the server is program running on. Every time this is changed, the cache must be cleared before testing. This is enabled by default; to disable it, change `"start": "expo start -c"` to `"start": "expo start"` to  in _package.json_. Note that it must be re-enabled every time the address is changed.
 
 At this point the app should be ready to test by running `npm start`. Run this command and follow the instructions in the terminal. If this crashes due to an invalid regular expression:
 
-7. In all instances of `metro-config/src/defaults/blacklist.js` within `node_modules` (some may be nested), change the line:
+8. In all instances of `metro-config/src/defaults/blacklist.js` within `node_modules` (some may be nested), change the line:
 
     ```
       /node_modules[/\\]react[/\\]dist[/\\].*/,
@@ -27,11 +27,9 @@ At this point the app should be ready to test by running `npm start`. Run this c
     Alternatively, running the attached Python script should do this automatically.
 
 ## How to build the application
-1. In the _.env_ file, replace the `0.0.0.0:3000` after `API_BASEROUTE` with the IP and port, or web address, that the server program is running on.
-2. Follow Expo's instructions at <https://docs.expo.io/versions/latest/distribution/building-standalone-apps/>, but before running `expo build`, you must open another terminal window in this directory and run `npm start`.
+1. In the _.env_ file, replace the `http://0.0.0.0:3000` after `API_BASEROUTE` with the IP and port, or web address, that the server program is running on.
+2. Follow Expo's instructions at <https://docs.expo.io/versions/latest/distribution/building-standalone-apps/>, but before running `expo build`, you must open another terminal window in this directory and run `npm start`. It may be necessary to clear the cache beforehand (see step 7 of _How to set up the development environment_).
 
-<br>
-<br>
 
 ## Features of the application
 
