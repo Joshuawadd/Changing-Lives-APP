@@ -1,10 +1,9 @@
 import React from 'react';
-import { Alert, ActivityIndicator, Image, TouchableOpacity, View, Linking, Text } from 'react-native';
+import { Alert, ActivityIndicator, Image, TouchableOpacity, View, Linking } from 'react-native';
 import { API_BASEROUTE } from 'react-native-dotenv';
 import styles from '../styles';
 import { retrieveData, genericGet, storeData } from '../utils';
 import ButtonList from '../components/ButtonList';
-import Hyperlink from 'react-native-hyperlink';
 
 export default class HomeScreen extends React.Component {
   constructor(props) {
@@ -88,15 +87,6 @@ export default class HomeScreen extends React.Component {
         </View>
       );
     }
-
-    handleClick = () => {
-      Linking.canOpenURL(this.props.url).then(supported => {
-        if (supported) {
-          Linking.openURL(this.props.url);
-        } else {
-          console.log("Don't know how to open URI: " + this.props.url);
-        }
-      })};
 
     return (
       <View style={styles.container}>
