@@ -118,27 +118,27 @@ export default class HomeScreen extends React.Component {
             }
           }}
         />
-        <View style={{flex: 1, flexDirection: 'row', alignItems: 'center', width: '100%', justifyContent: 'space-evenly' }}>
-        <TouchableOpacity
-        onPress={ ()=>{ Linking.openURL('https://www.facebook.com/ChangingLivesCharity/')}}>
-          <Image
-            source={require('../assets/fb.png')}
-            style={{ height: 50, width: 50 }} />
-        </TouchableOpacity>
-        <TouchableOpacity
-        onPress={ ()=>{ Linking.openURL('https://twitter.com/changinglives__')}}>
-          <Image
-            source={require('../assets/twitter.png')}
-            style={{ height: 50, width: 50 }} />
-        </TouchableOpacity>
-        <TouchableOpacity
-        onPress={ ()=>{ Linking.openURL('https://www.changing-lives.org.uk/')}}>
-          <Image
-            source={require('../assets/icon_1024.png')}
-            style={{ height: 50, width: 50 }} />
-        </TouchableOpacity>
+        <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', width: '100%', justifyContent: 'space-evenly' }}>
+          <TouchableOpacity
+            onPress={() => { Linking.openURL('https://www.facebook.com/ChangingLivesCharity/') }}>
+            <Image
+              source={require('../assets/fb.png')}
+              style={{ height: 50, width: 50 }} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => { Linking.openURL('https://twitter.com/changinglives__') }}>
+            <Image
+              source={require('../assets/twitter.png')}
+              style={{ height: 50, width: 50 }} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => { Linking.openURL('https://www.changing-lives.org.uk/') }}>
+            <Image
+              source={require('../assets/icon_1024.png')}
+              style={{ height: 50, width: 50 }} />
+          </TouchableOpacity>
         </View>
-        
+
       </View>
     );
   }

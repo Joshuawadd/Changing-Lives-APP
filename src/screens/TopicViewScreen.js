@@ -10,22 +10,28 @@ import { API_BASEROUTE } from 'react-native-dotenv';
 /* eslint-disable react-native/no-unused-styles */
 const roles = StyleSheet.create({
   creator: {
-    backgroundColor: colors.purple
+    backgroundColor: colors.purple,
+    padding: 10
   },
   staff: {
-    backgroundColor: colors.pink
+    backgroundColor: colors.pink,
+    padding: 10
   },
   user: {
-    backgroundColor: colors.blue
+    backgroundColor: colors.blue,
+    padding: 10
   },
   staffcreator: { // currently no distinction between staff and staffcreator
-    backgroundColor: colors.pink
+    backgroundColor: colors.pink,
+    padding: 10
   }
 });
 /* eslint-enable react-native/no-unused-styles */
 
+
+
 export default class TopicViewScreen extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
     this.state = {
       parentInfo: this.props.navigation.state.params,
@@ -37,7 +43,7 @@ export default class TopicViewScreen extends React.Component {
     };
   }
 
-  getData () {
+  getData() {
     const parentId = this.state.parentInfo.parent_id;
     retrieveData('authToken').then((authToken) => {
       var apiSubroute = '/api/forums/child/list';
@@ -54,14 +60,14 @@ export default class TopicViewScreen extends React.Component {
     headerTitleStyle: styles.headerTitle
   };
 
-  componentDidMount () {
+  componentDidMount() {
     this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow);
     this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide);
     this.props.navigation.setParams({ handleSubmit: this.submitChild });
     this.getData();
   };
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     this.keyboardDidShowListener.remove();
     this.keyboardDidHideListener.remove();
   }
@@ -111,7 +117,32 @@ export default class TopicViewScreen extends React.Component {
     }
   }
 
-  render () {
+  usernames = (role, supplied_user) => {
+    var username = "hello";
+
+    if (supplied_user === undefined) {
+
+      if (role === "creator") {
+        username = "Topic Creator";
+      }
+      if (role === "staff") {
+        username = "Staff";
+      }
+      if (role === 'user') {
+        username = "User";
+      }
+      if (role === 'staffcreator') {
+        username = "Topic Creato (Staff)";
+      }
+    }
+    else {
+      username = supplied_user
+    }
+
+    return (<Text style={{ color: colors.white }}>{username}:</Text>);
+  }
+
+  render() {
     if (this.state.isLoading) {
       return (
         <View style={{ flex: 1, padding: 20 }}>
@@ -120,9 +151,11 @@ export default class TopicViewScreen extends React.Component {
       );
     }
 
+
+
     const marginSize = 10;
     return (
-      <View style={{ flex: 1, margin: marginSize }}>
+      <View style={{ flex: 1, margin: marginSize, padding: 10 }}>
         <Text style={styles.parentTitle}>{this.state.parentInfo.parent_title}</Text>
 
         <Text>{this.state.parentInfo.parent_comment}</Text>
@@ -135,8 +168,12 @@ export default class TopicViewScreen extends React.Component {
           <FlatList
             data={this.state.childInfo}
             renderItem={({ item }) => (
-              <View style={roles[item.childRole]}>
-                <Text>{item.child_comment}</Text>
+              <View style={{ marginTop: 4, marginBottom: 5 }}>
+                <View style={roles[item.childRole]}>
+                  {this.usernames(item.childRole, item.username)}
+                  <Text style={{ color: colors.white }}>{item.child_comment}</Text>
+                </View>
+                <View style={{ flex: 0.1 }} />
               </View>
             )}
             keyExtractor={(item, index) => index.toString()}
