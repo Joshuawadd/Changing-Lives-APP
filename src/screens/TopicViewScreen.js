@@ -155,10 +155,13 @@ export default class TopicViewScreen extends React.Component {
 
     const marginSize = 10;
     return (
-      <View style={{ flex: 1, margin: marginSize, padding: 10 }}>
+      <View style={{ flex: 1, margin: marginSize, padding: 10, }}>
         <Text style={styles.parentTitle}>{this.state.parentInfo.parent_title}</Text>
+        <View style={{ marginTop: 5, marginBottom: 5, backgroundColor: colors.mdGrey, padding: 10}}>
+            <Text style={{ color: colors.white }}>{this.state.parentInfo.parent_comment}</Text>
+          <View style={{ flex: 0.1 }} />
+        </View>
 
-        <Text>{this.state.parentInfo.parent_comment}</Text>
         <KeyboardAvoidingView
           keyboardVerticalOffset={Header.HEIGHT + (marginSize * 2 + StatusBar.currentHeight) * this.state.keyboardShowing}
           style={{ flex: 1 }}
@@ -168,7 +171,7 @@ export default class TopicViewScreen extends React.Component {
           <FlatList
             data={this.state.childInfo}
             renderItem={({ item }) => (
-              <View style={{ marginTop: 4, marginBottom: 5 }}>
+              <View style={{ marginTop: 5, marginBottom: 5 }}>
                 <View style={roles[item.childRole]}>
                   {this.usernames(item.childRole, item.username)}
                   <Text style={{ color: colors.white }}>{item.child_comment}</Text>
