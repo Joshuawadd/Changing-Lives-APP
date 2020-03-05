@@ -71,6 +71,19 @@ export default StyleSheet.create({
     textAlign: 'left'
   },
 
+  topicPostText: {
+    color: colors.white,
+    fontFamily: 'Geogtq-Md',
+    fontSize: 16
+  },
+
+  topicPostUsername: {
+    color: colors.white,
+    fontFamily: 'Geogtq-SmBd',
+    // fontStyle: 'italic',
+    fontSize: 16
+  },
+
   subtitleText: {
     fontSize: 16,
     color: colors.white,
