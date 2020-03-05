@@ -6,7 +6,7 @@ import { retrieveData, genericGet, storeData } from '../utils';
 import ButtonList from '../components/ButtonList';
 
 export default class HomeScreen extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {
       isLoading: false,
@@ -20,7 +20,7 @@ export default class HomeScreen extends React.Component {
     headerTitleStyle: styles.headerTitle
   };
 
-  componentDidMount() {
+  componentDidMount () {
     this.focusListener = this.props.navigation.addListener('didFocus', () => {
       retrieveData('offlineModeEnabled').then((offlineModeEnabled) => {
         if (offlineModeEnabled === null) {
@@ -74,12 +74,12 @@ export default class HomeScreen extends React.Component {
     });
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     // Remove the event listener
     this.focusListener.remove();
   }
 
-  render() {
+  render () {
     if (this.state.isLoading) {
       return (
         <View style={{ flex: 1, padding: 20 }}>
@@ -120,19 +120,19 @@ export default class HomeScreen extends React.Component {
         />
         <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', width: '100%', justifyContent: 'space-evenly' }}>
           <TouchableOpacity
-            onPress={() => { Linking.openURL('https://www.facebook.com/ChangingLivesCharity/') }}>
+            onPress={() => { Linking.openURL('https://www.facebook.com/ChangingLivesCharity/'); }}>
             <Image
               source={require('../assets/fb.png')}
               style={{ height: 50, width: 50 }} />
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => { Linking.openURL('https://twitter.com/changinglives__') }}>
+            onPress={() => { Linking.openURL('https://twitter.com/changinglives__'); }}>
             <Image
               source={require('../assets/twitter.png')}
               style={{ height: 50, width: 50 }} />
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => { Linking.openURL('https://www.changing-lives.org.uk/') }}>
+            onPress={() => { Linking.openURL('https://www.changing-lives.org.uk/'); }}>
             <Image
               source={require('../assets/icon_1024.png')}
               style={{ height: 50, width: 50 }} />

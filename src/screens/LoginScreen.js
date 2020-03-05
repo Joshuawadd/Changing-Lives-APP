@@ -6,7 +6,7 @@ import { genericPost, storeData } from '../utils.js';
 import styles from '../styles';
 
 export default class LoginScreen extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {
       username: '',
@@ -23,17 +23,17 @@ export default class LoginScreen extends React.Component {
     headerTitleStyle: styles.headerTitle
   };
 
-  componentDidMount() {
+  componentDidMount () {
     // temporarily disable back button
     this.backHandler = BackHandler.addEventListener('hardwareBackPress', function () { return true; });
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     // stop disabling back button
     this.backHandler.remove();
   }
 
-  render() {
+  render () {
     // textInput cursor jumps to end: https://github.com/facebook/react-native/issues/27658
     return (
       <KeyboardAvoidingView
