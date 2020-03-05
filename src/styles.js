@@ -17,7 +17,7 @@ export default StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.white,
-    alignItems: 'center',
+    alignItems: 'center'
   },
 
   // contains multiple buttons or button-shaped elements

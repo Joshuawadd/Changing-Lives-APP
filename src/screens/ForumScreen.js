@@ -37,7 +37,7 @@ export default class ForumScreen extends React.Component {
           this.setState({
             isLoading: false,
             dataSource: response.content
-          }, function () {});
+          }, function () { });
         } else {
           this.props.navigation.goBack();
         }

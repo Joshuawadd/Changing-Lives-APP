@@ -10,16 +10,20 @@ import { API_BASEROUTE } from 'react-native-dotenv';
 /* eslint-disable react-native/no-unused-styles */
 const roles = StyleSheet.create({
   creator: {
-    backgroundColor: colors.purple
+    backgroundColor: colors.purple,
+    padding: 10
   },
   staff: {
-    backgroundColor: colors.pink
+    backgroundColor: colors.pink,
+    padding: 10
   },
   user: {
-    backgroundColor: colors.blue
+    backgroundColor: colors.blue,
+    padding: 10
   },
   staffcreator: { // currently no distinction between staff and staffcreator
-    backgroundColor: colors.pink
+    backgroundColor: colors.pink,
+    padding: 10
   }
 });
 /* eslint-enable react-native/no-unused-styles */
@@ -111,6 +115,29 @@ export default class TopicViewScreen extends React.Component {
     }
   }
 
+  usernames = (role, suppliedUser) => {
+    var username = 'hello';
+
+    if (suppliedUser === undefined) {
+      if (role === 'creator') {
+        username = 'Topic Creator';
+      }
+      if (role === 'staff') {
+        username = 'Staff';
+      }
+      if (role === 'user') {
+        username = 'User';
+      }
+      if (role === 'staffcreator') {
+        username = 'Topic Creato (Staff)';
+      }
+    } else {
+      username = suppliedUser;
+    }
+
+    return (<Text style={{ color: colors.white }}>{username}:</Text>);
+  }
+
   render () {
     if (this.state.isLoading) {
       return (
@@ -122,10 +149,13 @@ export default class TopicViewScreen extends React.Component {
 
     const marginSize = 10;
     return (
-      <View style={{ flex: 1, margin: marginSize }}>
+      <View style={{ flex: 1, margin: marginSize, padding: 10 }}>
         <Text style={styles.parentTitle}>{this.state.parentInfo.parent_title}</Text>
+        <View style={{ marginTop: 5, marginBottom: 5, backgroundColor: colors.mdGrey, padding: 10 }}>
+          <Text style={{ color: colors.white }}>{this.state.parentInfo.parent_comment}</Text>
+          <View style={{ flex: 0.1 }} />
+        </View>
 
-        <Text>{this.state.parentInfo.parent_comment}</Text>
         <KeyboardAvoidingView
           keyboardVerticalOffset={Header.HEIGHT + (marginSize * 2 + StatusBar.currentHeight) * this.state.keyboardShowing}
           style={{ flex: 1 }}
@@ -135,8 +165,12 @@ export default class TopicViewScreen extends React.Component {
           <FlatList
             data={this.state.childInfo}
             renderItem={({ item }) => (
-              <View style={roles[item.childRole]}>
-                <Text>{item.child_comment}</Text>
+              <View style={{ marginTop: 5, marginBottom: 5 }}>
+                <View style={roles[item.childRole]}>
+                  {this.usernames(item.childRole, item.username)}
+                  <Text style={{ color: colors.white }}>{item.child_comment}</Text>
+                </View>
+                <View style={{ flex: 0.1 }} />
               </View>
             )}
             keyExtractor={(item, index) => index.toString()}
