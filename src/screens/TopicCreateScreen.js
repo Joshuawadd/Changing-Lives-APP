@@ -102,7 +102,8 @@ export default class TopicCreateScreen extends React.Component {
             borderWidth: 1,
             padding: '2%',
             fontSize: 20,
-            textAlign: 'center'
+            textAlign: 'center',
+            fontFamily: 'Geogtq-Bd'
           }}
           placeholder='Title'
           onChangeText={(parentTitle) => this.setState({ parentTitle })}
@@ -124,7 +125,9 @@ export default class TopicCreateScreen extends React.Component {
                 flex: 1,
                 width: '100%',
                 borderWidth: 1,
-                padding: '2%'
+                padding: '2%',
+                fontFamily: 'Geogtq-Md',
+                fontSize: 16
               }}
               placeholder='Comment'
               onChangeText={(parentComment) => this.setState({ parentComment })}

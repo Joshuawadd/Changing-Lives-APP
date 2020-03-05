@@ -9,29 +9,65 @@ import { API_BASEROUTE } from 'react-native-dotenv';
 
 /* eslint-disable react-native/no-unused-styles */
 const roles = StyleSheet.create({
+  parent: {
+    backgroundColor: colors.mdGrey
+  },
   creator: {
-    backgroundColor: colors.purple,
-    padding: 10
+    backgroundColor: colors.purple
   },
   staff: {
-    backgroundColor: colors.pink,
-    padding: 10
+    backgroundColor: colors.pink
   },
   user: {
-    backgroundColor: colors.blue,
-    padding: 10
+    backgroundColor: colors.blue
   },
   staffcreator: { // currently no distinction between staff and staffcreator
-    backgroundColor: colors.pink,
-    padding: 10
+    backgroundColor: colors.pink
   }
 });
 /* eslint-enable react-native/no-unused-styles */
+
+const usernames = (role, suppliedUser) => {
+  var username;
+
+  if (suppliedUser === undefined) {
+    if ((role === 'creator') || (role === 'parent')) {
+      username = 'Topic Creator';
+    }
+    if (role === 'staff') {
+      username = 'Staff';
+    }
+    if (role === 'user') {
+      username = 'User';
+    }
+    if (role === 'staffcreator') {
+      username = 'Topic Creator (Staff)';
+    }
+  } else {
+    username = suppliedUser;
+  }
+
+  return (username);
+};
+
+function ParentPost (props) {
+  if (props.display) {
+    return <View style={{ marginTop: 5, marginBottom: 5 }}>
+      <View style={[{ padding: 10 }, roles.parent]}>
+        <Text style={styles.topicPostUsername}>{usernames('parent', props.parentInfo.username)}:</Text>
+        <Text style={styles.topicPostText}>{props.parentInfo.parent_comment}</Text>
+      </View>
+      <View style={{ flex: 0.1 }} />
+    </View>;
+  }
+  return null;
+}
 
 export default class TopicViewScreen extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
+      scrollWithParent: true, // change to false to "stick" the parent post to the top of the screen
       parentInfo: this.props.navigation.state.params,
       parentId: this.props.navigation.state.params.parent_id,
       childComment: '',
@@ -47,7 +83,18 @@ export default class TopicViewScreen extends React.Component {
       var apiSubroute = '/api/forums/child/list';
       var apiQuery = `?token=${authToken}&parentId=${parentId}`;
       genericGet(API_BASEROUTE, apiSubroute, apiQuery).then((response) => {
-        this.setState({ childInfo: response.content, isLoading: false });
+        var childInfo = response.content;
+        if (this.state.scrollWithParent) {
+          var parentAsChild = {
+            child_comment: this.state.parentInfo.parent_comment,
+            childRole: 'parent'
+          };
+          if (typeof (this.state.parentInfo.username) !== 'undefined') {
+            parentAsChild.username = this.state.parentInfo.username;
+          }
+          childInfo.unshift(parentAsChild);
+        }
+        this.setState({ childInfo: childInfo, isLoading: false });
       });
     });
   }
@@ -71,7 +118,7 @@ export default class TopicViewScreen extends React.Component {
   }
 
   _keyboardDidShow = () => {
-    this.setState({ keyboardShowing: true });
+    this.setState({ keyboardShowing: true, willScroll: true });
   }
 
   _keyboardDidHide = () => {
@@ -115,29 +162,6 @@ export default class TopicViewScreen extends React.Component {
     }
   }
 
-  usernames = (role, suppliedUser) => {
-    var username = 'hello';
-
-    if (suppliedUser === undefined) {
-      if (role === 'creator') {
-        username = 'Topic Creator';
-      }
-      if (role === 'staff') {
-        username = 'Staff';
-      }
-      if (role === 'user') {
-        username = 'User';
-      }
-      if (role === 'staffcreator') {
-        username = 'Topic Creato (Staff)';
-      }
-    } else {
-      username = suppliedUser;
-    }
-
-    return (<Text style={{ color: colors.white }}>{username}:</Text>);
-  }
-
   render () {
     if (this.state.isLoading) {
       return (
@@ -149,12 +173,10 @@ export default class TopicViewScreen extends React.Component {
 
     const marginSize = 10;
     return (
-      <View style={{ flex: 1, margin: marginSize, padding: 10 }}>
+      <View style={{ flex: 1, margin: marginSize }}>
         <Text style={styles.parentTitle}>{this.state.parentInfo.parent_title}</Text>
-        <View style={{ marginTop: 5, marginBottom: 5, backgroundColor: colors.mdGrey, padding: 10 }}>
-          <Text style={{ color: colors.white }}>{this.state.parentInfo.parent_comment}</Text>
-          <View style={{ flex: 0.1 }} />
-        </View>
+
+        <ParentPost display={!this.state.scrollWithParent} parentInfo={this.state.parentInfo} />
 
         <KeyboardAvoidingView
           keyboardVerticalOffset={Header.HEIGHT + (marginSize * 2 + StatusBar.currentHeight) * this.state.keyboardShowing}
@@ -166,9 +188,9 @@ export default class TopicViewScreen extends React.Component {
             data={this.state.childInfo}
             renderItem={({ item }) => (
               <View style={{ marginTop: 5, marginBottom: 5 }}>
-                <View style={roles[item.childRole]}>
-                  {this.usernames(item.childRole, item.username)}
-                  <Text style={{ color: colors.white }}>{item.child_comment}</Text>
+                <View style={[{ padding: 10 }, roles[item.childRole]]}>
+                  <Text style={styles.topicPostUsername}>{usernames(item.childRole, item.username)}:</Text>
+                  <Text style={styles.topicPostText}>{item.child_comment}</Text>
                 </View>
                 <View style={{ flex: 0.1 }} />
               </View>
@@ -181,7 +203,12 @@ export default class TopicViewScreen extends React.Component {
                 this.setState({ willScroll: false });
               }
             }}
-            onLayout={() => this.flatList.scrollToEnd({ animated: true })}
+            onLayout={() => {
+              if (this.state.willScroll) {
+                this.flatList.scrollToEnd({ animated: true });
+                this.setState({ willScroll: false });
+              }
+            }}
           />
 
           <View style={{ height: 40, flexDirection: 'row' }}>
@@ -191,7 +218,8 @@ export default class TopicViewScreen extends React.Component {
                 width: '80%',
                 borderWidth: 1,
                 padding: '2%',
-                fontSize: 18
+                fontSize: 18,
+                fontFamily: 'Geogtq-Md'
               }}
               placeholder='Add a comment...'
               onChangeText={(childComment) => this.setState({ childComment })}
