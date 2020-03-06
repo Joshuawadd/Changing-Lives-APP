@@ -1,7 +1,7 @@
 import React from 'react';
 import { Alert, Image, Text, View, TextInput, TouchableOpacity, BackHandler, KeyboardAvoidingView } from 'react-native';
 import { API_BASEROUTE } from 'react-native-dotenv';
-
+import ButtonList from '../components/ButtonList';
 import { genericPost, storeData } from '../utils.js';
 import styles from '../styles';
 
@@ -55,7 +55,65 @@ export default class LoginScreen extends React.Component {
             onChangeText={(password) => this.setState({ password })}
             value={this.state.password}
           />
-          <TouchableOpacity
+          <ButtonList
+            style={{
+              container: styles.topicContainer
+            }}
+            data={[
+              {
+                title: 'Login',
+                target: 'Login'
+              }
+            ]}
+            onPress={async () => {
+              this.setState({ loginButtonText: 'Logging in...' });
+              const apiSubroute = '/api/users/login';
+              const uname = this.state.username;
+              const pass = this.state.password;
+              const body = `userName=${uname}&userPassword=${pass}`;
+              const postResponse = await genericPost(API_BASEROUTE, apiSubroute, body, true);
+              if (postResponse.ok) {
+                storeData('authToken', postResponse.content);
+                // this.props.navigation.navigate('Home');
+                this.props.navigation.goBack();
+              } else {
+                if (postResponse.status === -1) {
+                  Alert.alert(
+                    'Error',
+                    postResponse.content,
+                    [
+                      {
+                        text: 'Continue offline',
+                        // onPress: () => console.log('Cancel Pressed'),
+                        style: 'cancel',
+                        onPress: () => {
+                          storeData('offlineModeEnabled', JSON.stringify(true));
+                          this.props.navigation.goBack();
+                        }
+                      },
+                      {
+                        text: 'Retry',
+                        onPress: () => { this.setState({ loginButtonText: 'Login' }); }
+                      }
+                    ],
+                    { cancelable: false }
+                  );
+                } else {
+                  Alert.alert(
+                    'Error',
+                    postResponse.content,
+                    [
+                      {
+                        text: 'Retry'
+                      }
+                    ],
+                    { cancelable: false }
+                  );
+                }
+              }
+            }}
+          />
+          {/* <TouchableOpacity
             style={styles.button}
             onPress={async () => {
               this.setState({ loginButtonText: 'Logging in...' });
@@ -105,7 +163,7 @@ export default class LoginScreen extends React.Component {
               }
             }}>
             <Text style={styles.buttonText}>{this.state.loginButtonText}</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </KeyboardAvoidingView>
     );
