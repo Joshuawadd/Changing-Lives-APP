@@ -172,6 +172,12 @@ export default class TopicViewScreen extends React.Component {
     }
 
     const marginSize = 10;
+    console.log('Keyboard showing:', this.state.keyboardShowing);
+    console.log(Header);
+    console.log(Header.HEIGHT);
+    console.log(StatusBar);
+    console.log(StatusBar.currentHeight);
+
     return (
       <View style={{ flex: 1, margin: marginSize }}>
         <Text style={styles.parentTitle}>{this.state.parentInfo.parent_title}</Text>
