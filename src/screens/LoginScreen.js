@@ -1,7 +1,7 @@
 import React from 'react';
 import { Alert, Image, Text, View, TextInput, TouchableOpacity, BackHandler, KeyboardAvoidingView } from 'react-native';
 import { API_BASEROUTE } from 'react-native-dotenv';
-
+import ButtonList from '../components/ButtonList';
 import { genericPost, storeData } from '../utils.js';
 import styles from '../styles';
 
@@ -55,8 +55,16 @@ export default class LoginScreen extends React.Component {
             onChangeText={(password) => this.setState({ password })}
             value={this.state.password}
           />
-          <TouchableOpacity
-            style={styles.button}
+          <ButtonList
+            style={{
+              container: styles.topicContainer
+            }}
+            data={[
+              {
+                title: 'Login',
+                target: 'Login'
+              }
+            ]}
             onPress={async () => {
               this.setState({ loginButtonText: 'Logging in...' });
               const apiSubroute = '/api/users/login';
@@ -103,9 +111,8 @@ export default class LoginScreen extends React.Component {
                   );
                 }
               }
-            }}>
-            <Text style={styles.buttonText}>{this.state.loginButtonText}</Text>
-          </TouchableOpacity>
+            }}
+          />
         </View>
       </KeyboardAvoidingView>
     );
