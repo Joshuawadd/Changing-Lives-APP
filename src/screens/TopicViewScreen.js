@@ -172,10 +172,9 @@ export default class TopicViewScreen extends React.Component {
     }
 
     const marginSize = 10;
-    const statusBarHeight = Platform.OS === 'android' ? StatusBar.currentHeight : 0;
     const offset = Platform.OS === 'ios'
       ? Header.HEIGHT + (marginSize * 2)
-      : Header.HEIGHT + (marginSize * 2 + statusBarHeight) * this.state.keyboardShowing;
+      : Header.HEIGHT + (marginSize * 2 + StatusBar.currentHeight) * this.state.keyboardShowing;
     return (
       <View style={{ flex: 1, margin: marginSize }}>
         <Text style={styles.parentTitle}>{this.state.parentInfo.parent_title}</Text>
@@ -234,7 +233,7 @@ export default class TopicViewScreen extends React.Component {
               style={{ backgroundColor: colors.rouge, width: '20%', justifyContent: 'center' }}
               onPress={() => this.submitChild()}
             >
-              <Text style={{ textAlign: 'center' }}>==></Text>
+              <Text style={{ textAlign: 'center', color: colors.white, fontFamily: 'Geogtq-SmBd', fontSize: 16 }}>Send</Text>
             </TouchableOpacity>
           </View>
 
