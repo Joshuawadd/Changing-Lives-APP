@@ -173,14 +173,9 @@ export default class TopicViewScreen extends React.Component {
 
     const marginSize = 10;
     const statusBarHeight = Platform.OS === 'android' ? StatusBar.currentHeight : 0;
-    /*
-    console.log('Keyboard showing:', this.state.keyboardShowing);
-    console.log(Header);
-    console.log(Header.HEIGHT);
-    console.log(StatusBar);
-    console.log(StatusBar.currentHeight); // not on IOS
-    console.log(useHeaderHeight())
-*/
+    const offset = Platform.OS === 'ios'
+      ? Header.HEIGHT + (marginSize * 2)
+      : Header.HEIGHT + (marginSize * 2 + statusBarHeight) * this.state.keyboardShowing;
     return (
       <View style={{ flex: 1, margin: marginSize }}>
         <Text style={styles.parentTitle}>{this.state.parentInfo.parent_title}</Text>
@@ -188,7 +183,8 @@ export default class TopicViewScreen extends React.Component {
         <ParentPost display={!this.state.scrollWithParent} parentInfo={this.state.parentInfo} />
 
         <KeyboardAvoidingView
-          keyboardVerticalOffset={Header.HEIGHT + (marginSize * 2 + statusBarHeight) * this.state.keyboardShowing}
+          // keyboardVerticalOffset={Header.HEIGHT + (marginSize * 2 + statusBarHeight) * !this.state.keyboardShowing}
+          keyboardVerticalOffset={offset}
           style={{ flex: 1 }}
           behavior="padding"
         >

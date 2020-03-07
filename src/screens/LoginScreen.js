@@ -10,8 +10,8 @@ export default class LoginScreen extends React.Component {
     super(props);
     this.state = {
       keyboardShowing: false,
-      username: '',
-      password: '',
+      username: 'CLStaff',
+      password: 'admin',
       loginButtonText: 'Login'
     };
   }
@@ -86,9 +86,8 @@ export default class LoginScreen extends React.Component {
               const body = `userName=${uname}&userPassword=${pass}`;
               const postResponse = await genericPost(API_BASEROUTE, apiSubroute, body, true);
               if (postResponse.ok) {
-                console.log(postResponse.content)
                 storeData('authToken', postResponse.content.token);
-                storeData('userId', postResponse.content.userId);
+                storeData('userId', postResponse.content.id.toString());
                 // this.props.navigation.navigate('Home');
                 this.props.navigation.goBack();
               } else {
