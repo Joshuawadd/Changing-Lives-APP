@@ -16,11 +16,11 @@ export default class ForumScreen extends React.Component {
     headerStyle: styles.header,
     headerTitleStyle: styles.headerTitle,
     headerRight: () => (
-      <TouchableWithoutFeedback
+      <TouchableOpacity
         onPress={() => { navigation.navigate('TopicCreate'); }}
       >
-        <Text style={{ margin: 20, fontSize: 20 }}>+</Text>
-      </TouchableWithoutFeedback>
+        <Text style={{ margin: 6, marginRight: 20, fontSize: 30 }}>+</Text>
+      </TouchableOpacity>
     )
   });
 

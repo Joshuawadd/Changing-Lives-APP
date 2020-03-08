@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert, Image, Text, View, TextInput, TouchableOpacity, BackHandler, KeyboardAvoidingView } from 'react-native';
+import { Alert, Image, Text, View, TextInput, Keyboard, TouchableOpacity, BackHandler, KeyboardAvoidingView } from 'react-native';
 import { API_BASEROUTE } from 'react-native-dotenv';
 import ButtonList from '../components/ButtonList';
 import { genericPost, storeData } from '../utils.js';
@@ -9,6 +9,7 @@ export default class LoginScreen extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
+      keyboardShowing: false,
       username: '',
       password: '',
       loginButtonText: 'Login'
@@ -24,11 +25,23 @@ export default class LoginScreen extends React.Component {
   };
 
   componentDidMount () {
+    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow);
+    this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide);
     // temporarily disable back button
     this.backHandler = BackHandler.addEventListener('hardwareBackPress', function () { return true; });
   }
 
+  _keyboardDidShow = () => {
+    this.setState({ keyboardShowing: true });
+  }
+
+  _keyboardDidHide = () => {
+    this.setState({ keyboardShowing: false });
+  }
+
   componentWillUnmount () {
+    this.keyboardDidShowListener.remove();
+    this.keyboardDidHideListener.remove();
     // stop disabling back button
     this.backHandler.remove();
   }
@@ -61,7 +74,7 @@ export default class LoginScreen extends React.Component {
             }}
             data={[
               {
-                title: 'Login',
+                title: this.state.loginButtonText,
                 target: 'Login'
               }
             ]}
@@ -73,10 +86,12 @@ export default class LoginScreen extends React.Component {
               const body = `userName=${uname}&userPassword=${pass}`;
               const postResponse = await genericPost(API_BASEROUTE, apiSubroute, body, true);
               if (postResponse.ok) {
-                storeData('authToken', postResponse.content);
+                storeData('authToken', postResponse.content.token);
+                storeData('userId', postResponse.content.id.toString());
                 // this.props.navigation.navigate('Home');
                 this.props.navigation.goBack();
               } else {
+                this.setState({ loginButtonText: 'Login' });
                 if (postResponse.status === -1) {
                   Alert.alert(
                     'Error',
