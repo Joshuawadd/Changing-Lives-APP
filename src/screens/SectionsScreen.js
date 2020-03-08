@@ -1,14 +1,17 @@
 import React from 'react';
-import { Alert, Text, View, ActivityIndicator } from 'react-native';
+import { RefreshControl, Alert, Text, View, ActivityIndicator } from 'react-native';
 import { genericGet, retrieveData, storeData } from '../utils.js';
 import { API_BASEROUTE } from 'react-native-dotenv';
 import ButtonList from '../components/ButtonList';
 import styles from '../styles';
 
 export default class SectionsScreen extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
-    this.state = { isLoading: true };
+    this.state = {
+      isLoading: true,
+      refreshing: false
+    };
   }
 
   static navigationOptions = {
@@ -17,7 +20,7 @@ export default class SectionsScreen extends React.Component {
     headerTitleStyle: styles.headerTitle
   };
 
-  componentDidMount () {
+  getData() {
     retrieveData('offlineModeEnabled').then((offlineModeEnabled) => {
       if (JSON.parse(offlineModeEnabled) === true) {
         retrieveData('sectionData').then((sectionData) => {
@@ -25,21 +28,20 @@ export default class SectionsScreen extends React.Component {
             isLoading: false,
             dataSource: JSON.parse(sectionData),
             showButtons: false
-          }, function () { });
+          });
         });
       } else {
         retrieveData('authToken').then((authToken) => {
           var apiSubroute = '/api/sections/list';
           var apiQuery = `?token=${authToken}`;
           genericGet(API_BASEROUTE, apiSubroute, apiQuery, true).then((response) => {
-            // alert(response.ok);
             if (response.ok) {
               storeData('sectionData', JSON.stringify(response.content));
               this.setState({
                 isLoading: false,
                 dataSource: response.content,
                 showButtons: true
-              }, function () { });
+              });
             } else {
               if (response.status === 403) {
                 this.props.navigation.navigate('Login');
@@ -78,7 +80,15 @@ export default class SectionsScreen extends React.Component {
     });
   }
 
-  render () {
+  componentDidMount() {
+    this.getData();
+  }
+
+  _onRefresh = () => {
+    this.getData(); // refresh
+  }
+
+  render() {
     if (this.state.isLoading) {
       return (
         <View style={{ flex: 1, padding: 20 }}>
@@ -94,9 +104,17 @@ export default class SectionsScreen extends React.Component {
         <ButtonList
           data={this.state.dataSource}
           onPress={(item) => {
+            console.log(item)
             this.props.navigation.navigate('Files', { item, showButtons });
           }}
           titleKey="name"
+          refreshControl={
+            <RefreshControl
+              // refresh control used for the Pull to Refresh
+              refreshing={this.state.refreshing}
+              onRefresh={this._onRefresh}
+            />
+          }
         />
       </View>
     );

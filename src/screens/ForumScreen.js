@@ -1,14 +1,17 @@
 import React from 'react';
-import { Button, Image, StyleSheet, Text, View, TextInput, ActivityIndicator, TouchableOpacity, FlatList, TouchableWithoutFeedback } from 'react-native';
+import { RefreshControl, Button, Image, StyleSheet, Text, View, TextInput, ActivityIndicator, TouchableOpacity, FlatList, TouchableWithoutFeedback } from 'react-native';
 import { genericGet, genericPost, retrieveData } from '../utils.js';
 import { API_BASEROUTE } from 'react-native-dotenv';
 import ButtonList from '../components/ButtonList';
 import styles from '../styles';
 
 export default class ForumScreen extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
-    this.state = { isLoading: true };
+    this.state = {
+      isLoading: true,
+      refreshing: false
+    };
   }
 
   static navigationOptions = ({ navigation }) => ({
@@ -24,20 +27,13 @@ export default class ForumScreen extends React.Component {
     )
   });
 
-  componentDidMount () {
-    this.willFocusSubscription = this.props.navigation.addListener('willFocus', this._willFocus);
-  }
-
-  _willFocus = () => {
+  getData () {
     retrieveData('authToken').then((authToken) => {
       var apiSubroute = '/api/forums/parent/list';
       var apiQuery = `?token=${authToken}`;
       genericGet(API_BASEROUTE, apiSubroute, apiQuery).then((response) => {
         if (response.ok) {
-          this.setState({
-            isLoading: false,
-            dataSource: response.content
-          }, function () { });
+          this.setState({ dataList: response.content, isLoading: false });
         } else {
           this.props.navigation.goBack();
         }
@@ -45,11 +41,19 @@ export default class ForumScreen extends React.Component {
     });
   }
 
-  componentWillUnmount () {
-    this.willFocusSubscription.remove();
+  componentDidMount() {
+    this.getData();
   }
 
-  render () {
+  componentWillUnmount() {
+
+  }
+
+  _onRefresh = () => {
+    this.getData(); // refresh
+  }
+
+  render() {
     if (this.state.isLoading) {
       return (
         <View style={{ flex: 1, padding: 20 }}>
@@ -68,12 +72,19 @@ export default class ForumScreen extends React.Component {
             titleText: styles.topicButtonText,
             subtitleText: styles.subtitleText
           }}
-          data={this.state.dataSource.reverse()}
+          data={this.state.dataList.reverse()}
           onPress={(item) => {
             this.props.navigation.navigate('TopicView', item);
           }}
           titleKey="parent_title"
           subtitleKey="parent_comment"
+          refreshControl={
+            <RefreshControl
+              // refresh control used for the Pull to Refresh
+              refreshing={this.state.refreshing}
+              onRefresh={this._onRefresh}
+            />
+          }
         />
       </View>
     );

@@ -171,7 +171,6 @@ export default class TopicViewScreen extends React.Component {
   }
 
   _onRefresh = () => {
-    console.log('Hello');
     this.getData(); // refresh
   }
 
