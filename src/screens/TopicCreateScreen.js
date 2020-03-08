@@ -22,11 +22,11 @@ export default class TopicCreateScreen extends React.Component {
       title: 'Create Topic',
       headerStyle: styles.header,
       headerTitleStyle: styles.headerTitle,
-      headerRight: <TouchableWithoutFeedback
-        onPress={() => params.handleSubmit()}
+      headerRight: <TouchableOpacity
+        onPress={() => { params.handleSubmit(); }}
       >
-        <Text style={{ margin: 20, fontSize: 20 }}>✓</Text>
-      </TouchableWithoutFeedback>
+        <Text style={{ margin: 10, marginRight: 20, fontSize: 20 }}>✓</Text>
+      </TouchableOpacity>
     };
   };
 
@@ -91,10 +91,10 @@ export default class TopicCreateScreen extends React.Component {
 
   render () {
     const marginSize = 10;
+    const offsetAdd = 44;
     const offset = Platform.OS === 'ios'
-      ? Header.HEIGHT + (marginSize * 2)
-      : Header.HEIGHT + (marginSize * 2 + StatusBar.currentHeight) * !this.state.keyboardShowing;
-
+      ? Header.HEIGHT + offsetAdd
+      : Header.HEIGHT + (marginSize * 2 + StatusBar.currentHeight) * this.state.keyboardShowing;
     return (
 
       <View style={{ flex: 1, margin: marginSize }}>
