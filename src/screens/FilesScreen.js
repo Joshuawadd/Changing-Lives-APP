@@ -7,7 +7,7 @@ import ButtonList from '../components/ButtonList';
 import styles from '../styles';
 
 export default class FilesScreen extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {
       refreshing: false,
@@ -23,7 +23,7 @@ export default class FilesScreen extends React.Component {
     headerTitleStyle: styles.headerTitle
   });
 
-  getData() {
+  getData () {
     this.setState({ isLoading: true });
     retrieveData('authToken').then((authToken) => {
       var apiSubroute = '/api/sections/list';
@@ -45,7 +45,7 @@ export default class FilesScreen extends React.Component {
     });
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.getData();
   }
 
@@ -53,7 +53,7 @@ export default class FilesScreen extends React.Component {
     this.getData(); // refresh
   }
 
-  render() {
+  render () {
     if (typeof (this.state.noFilesText) === 'undefined') {
       return (
         <View style={styles.container}>

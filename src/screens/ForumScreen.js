@@ -6,7 +6,7 @@ import ButtonList from '../components/ButtonList';
 import styles from '../styles';
 
 export default class ForumScreen extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {
       isLoading: true,
@@ -41,11 +41,11 @@ export default class ForumScreen extends React.Component {
     });
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.getData();
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
 
   }
 
@@ -53,7 +53,7 @@ export default class ForumScreen extends React.Component {
     this.getData(); // refresh
   }
 
-  render() {
+  render () {
     if (this.state.isLoading) {
       return (
         <View style={{ flex: 1, padding: 20 }}>

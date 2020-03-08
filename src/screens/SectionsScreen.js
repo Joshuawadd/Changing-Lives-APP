@@ -6,7 +6,7 @@ import ButtonList from '../components/ButtonList';
 import styles from '../styles';
 
 export default class SectionsScreen extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {
       isLoading: true,
@@ -20,7 +20,7 @@ export default class SectionsScreen extends React.Component {
     headerTitleStyle: styles.headerTitle
   };
 
-  getData() {
+  getData () {
     retrieveData('offlineModeEnabled').then((offlineModeEnabled) => {
       if (JSON.parse(offlineModeEnabled) === true) {
         retrieveData('sectionData').then((sectionData) => {
@@ -80,7 +80,7 @@ export default class SectionsScreen extends React.Component {
     });
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.getData();
   }
 
@@ -88,7 +88,7 @@ export default class SectionsScreen extends React.Component {
     this.getData(); // refresh
   }
 
-  render() {
+  render () {
     if (this.state.isLoading) {
       return (
         <View style={{ flex: 1, padding: 20 }}>
@@ -104,7 +104,7 @@ export default class SectionsScreen extends React.Component {
         <ButtonList
           data={this.state.dataSource}
           onPress={(item) => {
-            console.log(item)
+            console.log(item);
             this.props.navigation.navigate('Files', { item, showButtons });
           }}
           titleKey="name"
