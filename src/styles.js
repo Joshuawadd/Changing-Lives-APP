@@ -134,5 +134,23 @@ export default StyleSheet.create({
 
   headerTitle: {
     fontFamily: 'Geogtq-SmBd'
+  },
+
+  fileButton: {
+    width: '100%',
+    padding: '5%',
+    backgroundColor: colors.white,
+    alignItems: 'flex-start',
+    marginTop: '0%',
+    marginBottom: '1%',
+    borderRadius: 0
+  },
+
+  fileButtonText: {
+    fontFamily: 'Geogtq-SmBd',
+    fontSize: 20,
+    textTransform: 'uppercase',
+    color: colors.blue,
+    textAlign: 'left'
   }
 });

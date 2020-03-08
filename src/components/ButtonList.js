@@ -1,11 +1,24 @@
 import React from 'react';
-import { View, TouchableOpacity, Text, FlatList, TouchableWithoutFeedback } from 'react-native';
+import { View, TouchableOpacity, Text, FlatList, TouchableWithoutFeedback, Image } from 'react-native';
 import styles from '../styles';
 import colors from '../colors';
 class Subtitle extends React.Component {
   render () {
     if (this.props.text) {
       return <Text numberOfLines={this.props.numberOfLines} style={this.props.style}>{this.props.text}</Text>;
+    } else {
+      return null;
+    }
+  }
+}
+class PDFButtonImage extends React.Component {
+  
+
+  render () {
+    if (this.props.display) {
+      return <Image
+        source={require('../assets/pdf.png')}
+        style={{ height: 30, width: 30 }} />
     } else {
       return null;
     }
@@ -20,11 +33,12 @@ export default class ButtonList extends React.Component {
     } else {
       this.titleKey = this.props.titleKey;
     }
-    if (typeof this.props.titleKey === 'undefined') {
+    if (typeof this.props.subtitleKey === 'undefined') {
       this.subtitleKey = 'subtitle';
     } else {
       this.subtitleKey = this.props.subtitleKey;
     }
+    this.displayPDFIcon = this.props.displayPDFIcon;
   }
 
   // see https://stackoverflow.com/a/2631198 for ?. notation
@@ -59,6 +73,10 @@ export default class ButtonList extends React.Component {
                 delayPressIn={50}
                 onPress={() => this.props.onPress(item)}
               >
+                <Image
+                  source={require('../assets/fb.png')}
+                  style={{ height: 50, width: 50 }} />
+                {/* <ButtonImage imageSource={'../assets/pdf.png'}></ButtonImage> */}
                 <Text numberOfLines={1} style={[styles.buttonText, this.props.style?.titleText]}>{item[this.titleKey]}</Text>
                 <Subtitle numberOfLines={1} style={this.props.style?.subtitleText} text={item[this.subtitleKey]}></Subtitle>
               </TouchableOpacity>
@@ -67,7 +85,10 @@ export default class ButtonList extends React.Component {
                 style={[styles.button, this.props.style?.button]}
                 onPress={() => this.props.onPress(item)}
               >
+                <View flexDirection='row' alignItems='center'>
+                <PDFButtonImage display={this.displayPDFIcon}></PDFButtonImage>
                 <Text numberOfLines={1} style={[styles.buttonText, this.props.style?.titleText]}>{item[this.titleKey]}</Text>
+                </View>
                 <Subtitle numberOfLines={1} style={this.props.style?.subtitleText} text={item[this.subtitleKey]}></Subtitle>
               </TouchableOpacity>
             }
