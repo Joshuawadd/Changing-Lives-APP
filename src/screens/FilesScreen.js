@@ -37,6 +37,13 @@ export default class FilesScreen extends React.Component {
         <View style={styles.container}>
           <Text style={styles.infoText}>{this.state.sectionInfo.text}</Text>
           <ButtonList
+            displayPDFIcon={true}
+            style={{
+              container: styles.topicContainer,
+              button: styles.fileButton,
+              titleText: styles.fileButtonText,
+              subtitleText: styles.subtitleText
+            }}
             data={this.state.sectionInfo.files}
             onPress={
               (item) => {
