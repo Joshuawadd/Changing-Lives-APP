@@ -117,7 +117,8 @@ export default class TopicViewScreen extends React.Component {
     this.keyboardDidHideListener.remove();
   }
 
-  _keyboardDidShow = () => {
+  _keyboardDidShow = (event) => {
+    //alert(JSON.stringify(event))
     this.setState({ keyboardShowing: true, willScroll: true });
   }
 
@@ -172,8 +173,10 @@ export default class TopicViewScreen extends React.Component {
     }
 
     const marginSize = 10;
+    const offsetAdd = 44;
+    //alert(Header.HEIGHT)
     const offset = Platform.OS === 'ios'
-      ? Header.HEIGHT + (marginSize * 2)
+      ? Header.HEIGHT + offsetAdd
       : Header.HEIGHT + (marginSize * 2 + StatusBar.currentHeight) * this.state.keyboardShowing;
     return (
       <View style={{ flex: 1, margin: marginSize }}>
