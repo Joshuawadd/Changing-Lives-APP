@@ -10,6 +10,7 @@ import Files from './src/screens/FilesScreen';
 import Forum from './src/screens/ForumScreen';
 import TopicView from './src/screens/TopicViewScreen';
 import TopicCreate from './src/screens/TopicCreateScreen';
+import PasswordChange from './src/screens/PasswordChangeScreen';
 
 // test screen:
 // import ButtonListTest from "./src/screens/ButtonListTestScreen";
@@ -23,12 +24,13 @@ const AppNavigator = createStackNavigator(
     Forum,
     TopicView,
     TopicCreate,
-    Settings
+    Settings,
+    PasswordChange
 
     // ButtonListTest,
   },
   {
-    initialRouteName: 'Home'
+    initialRouteName: 'PasswordChange'
   }
 );
 
