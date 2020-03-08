@@ -1,11 +1,12 @@
 import React from 'react';
 import { Header, useHeaderHeight } from 'react-navigation-stack';
-import { Platform, ActivityIndicator, StatusBar, Text, View, StyleSheet, Alert, TextInput, TouchableOpacity, KeyboardAvoidingView, Keyboard } from 'react-native';
+import { Platform, ActivityIndicator, StatusBar, Text, View, StyleSheet, Alert, TextInput, TouchableOpacity, KeyboardAvoidingView, Keyboard, RefreshControl, ScrollView } from 'react-native';
 import styles from '../styles';
 import colors from '../colors';
 import { FlatList } from 'react-native-gesture-handler';
 import { retrieveData, genericPost, genericGet } from '../utils';
 import { API_BASEROUTE } from 'react-native-dotenv';
+import Constants from 'expo-constants';
 
 /* eslint-disable react-native/no-unused-styles */
 const roles = StyleSheet.create({
@@ -26,6 +27,12 @@ const roles = StyleSheet.create({
   }
 });
 /* eslint-enable react-native/no-unused-styles */
+
+function wait (timeout) {
+  return new Promise(resolve => {
+    setTimeout(resolve, timeout);
+  });
+}
 
 const usernames = (role, suppliedUser) => {
   var username;
@@ -73,7 +80,8 @@ export default class TopicViewScreen extends React.Component {
       childComment: '',
       isLoading: true,
       keyboardShowing: false,
-      willScroll: false
+      willScroll: false,
+      refreshing: false
     };
   }
 
@@ -162,6 +170,11 @@ export default class TopicViewScreen extends React.Component {
     }
   }
 
+  _onRefresh = () => {
+    console.log('Hello');
+    this.getData(); // refresh
+  }
+
   render () {
     if (this.state.isLoading) {
       return (
@@ -214,6 +227,13 @@ export default class TopicViewScreen extends React.Component {
                 this.setState({ willScroll: false });
               }
             }}
+            refreshControl={
+              <RefreshControl
+                // refresh control used for the Pull to Refresh
+                refreshing={this.state.refreshing}
+                onRefresh={this._onRefresh}
+              />
+            }
           />
 
           <View style={{ height: 40, flexDirection: 'row' }}>
