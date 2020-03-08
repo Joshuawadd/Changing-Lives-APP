@@ -12,13 +12,11 @@ class Subtitle extends React.Component {
   }
 }
 class PDFButtonImage extends React.Component {
-  
-
   render () {
     if (this.props.display) {
       return <Image
         source={require('../assets/pdf.png')}
-        style={{ height: 30, width: 30 }} />
+        style={{ height: 30, width: 30 }} />;
     } else {
       return null;
     }
@@ -85,9 +83,9 @@ export default class ButtonList extends React.Component {
                 style={[styles.button, this.props.style?.button]}
                 onPress={() => this.props.onPress(item)}
               >
-                <View flexDirection='row' alignItems='center'>
-                <PDFButtonImage display={this.displayPDFIcon}></PDFButtonImage>
-                <Text numberOfLines={1} style={[styles.buttonText, this.props.style?.titleText]}>{item[this.titleKey]}</Text>
+                <View flexDirection='row'>
+                  <PDFButtonImage display={this.displayPDFIcon}></PDFButtonImage>
+                  <Text numberOfLines={1} style={[styles.buttonText, this.props.style?.titleText]}>{item[this.titleKey]}</Text>
                 </View>
                 <Subtitle numberOfLines={1} style={this.props.style?.subtitleText} text={item[this.subtitleKey]}></Subtitle>
               </TouchableOpacity>
