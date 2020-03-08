@@ -62,7 +62,7 @@ export default class ButtonList extends React.Component {
         style={{ width: this.width }}
         contentContainerStyle={[this.containerStyle, this.props.style?.container]}
         data={this.props.data}
-
+        refreshControl={this.props.refreshControl}
         renderItem={({ item, index }) =>
           <View>
             {item.disabled === true
