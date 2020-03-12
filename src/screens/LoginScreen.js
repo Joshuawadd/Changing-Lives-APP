@@ -85,10 +85,16 @@ export default class LoginScreen extends React.Component {
               const pass = this.state.password;
               const body = `userName=${uname}&userPassword=${pass}`;
               const postResponse = await genericPost(API_BASEROUTE, apiSubroute, body, true);
+              console.log(postResponse);
               if (postResponse.ok) {
                 storeData('authToken', postResponse.content.token);
                 storeData('userId', postResponse.content.id.toString());
-                // this.props.navigation.navigate('Home');
+                storeData('userName', uname);
+                storeData('isAdmin', postResponse.content.isAdmin.toString());
+                if (postResponse.content.forceReset === 1) {
+                  // password reset code here
+                  alert('Reset your password!');
+                }
                 this.props.navigation.goBack();
               } else {
                 this.setState({ loginButtonText: 'Login' });

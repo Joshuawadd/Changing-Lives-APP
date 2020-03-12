@@ -1,5 +1,5 @@
 import React from 'react';
-import { RefreshControl, Button, Image, StyleSheet, Text, View, TextInput, ActivityIndicator, TouchableOpacity, FlatList, TouchableWithoutFeedback } from 'react-native';
+import { Alert, RefreshControl, Button, Image, StyleSheet, Text, View, TextInput, ActivityIndicator, TouchableOpacity, FlatList, TouchableWithoutFeedback } from 'react-native';
 import { genericGet, genericPost, retrieveData } from '../utils.js';
 import { API_BASEROUTE } from 'react-native-dotenv';
 import ButtonList from '../components/ButtonList';
@@ -42,11 +42,13 @@ export default class ForumScreen extends React.Component {
   }
 
   componentDidMount () {
-    this.getData();
+    this.focusListener = this.props.navigation.addListener('didFocus', () => {
+      this.getData();
+    });
   }
 
   componentWillUnmount () {
-
+    this.focusListener.remove();
   }
 
   _onRefresh = () => {
@@ -75,6 +77,43 @@ export default class ForumScreen extends React.Component {
           data={this.state.dataList.reverse()}
           onPress={(item) => {
             this.props.navigation.navigate('TopicView', item);
+          }}
+          onLongPress={(item) => {
+            // const isAdmin = false //placeholder
+            retrieveData('userName').then((userName) => {
+              retrieveData('isAdmin').then((isAdmin) => {
+                if ((JSON.parse(isAdmin) === 1) || (item.username === userName)) {
+                  Alert.alert(
+                    'Delete Message',
+                    'Do you really want to delete this message?',
+                    [
+                      {
+                        text: 'No',
+                        onPress: () => {
+
+                        }
+                      },
+                      {
+                        text: 'Yes',
+                        onPress: () => {
+                          retrieveData('authToken').then((authToken) => {
+                            var apiSubroute = '/api/forums/parent/remove';
+                            var body = `parentId=${item.parent_id}`;
+                            genericPost(API_BASEROUTE, apiSubroute, body).then((response) => {
+                              if (response.ok) { // success
+                                alert('Post successfully deleted!');
+                                this.getData();
+                              }
+                            });
+                          });
+                        }
+                      }
+                    ],
+                    { cancelable: true }
+                  );
+                }
+              });
+            });
           }}
           titleKey="parent_title"
           subtitleKey="parent_comment"

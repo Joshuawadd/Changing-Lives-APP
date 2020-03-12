@@ -7,7 +7,9 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 export default class SettingsScreen extends React.Component {
   constructor (props) {
     super(props);
-    this.state = {};
+    this.state = {
+      logOutText: 'Logout'
+    };
     this.offlineToggleText = {
       true: 'Offline Mode: Enabled',
       false: 'Offline Mode: Disabled'
@@ -49,8 +51,11 @@ export default class SettingsScreen extends React.Component {
             <Text style={styles.buttonText}>{this.offlineToggleText[this.state.offlineModeEnabled]}</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.button} onPress={() => { storeData('authToken', ''); }}>
-            <Text style={styles.buttonText}> Logout </Text>
+          <TouchableOpacity style={styles.button} onPress={() => {
+            storeData('authToken', '');
+            this.setState({ logOutText: 'Logged out!' });
+          }}>
+            <Text style={styles.buttonText}>{this.state.logOutText}</Text>
           </TouchableOpacity>
 
           {/*
