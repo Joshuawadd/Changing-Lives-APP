@@ -44,7 +44,8 @@ export default class SectionsScreen extends React.Component {
               });
             } else {
               if (response.status === 403) {
-                this.props.navigation.navigate('Login');
+                // this.props.navigation.navigate('Login');
+                this.props.navigation.navigate('Home');
               } else {
                 Alert.alert(
                   'Error',

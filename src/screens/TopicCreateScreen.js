@@ -54,7 +54,7 @@ export default class TopicCreateScreen extends React.Component {
             onPress: () => {
               retrieveData('authToken').then((authToken) => {
                 var apiSubroute = '/api/forums/parent/create';
-                var body = `token=${authToken}&parentTitle=${this.state.parentTitle}&parentComment=${this.state.parentComment}`;
+                var body = `parentTitle=${this.state.parentTitle}&parentComment=${this.state.parentComment}`;
                 genericPost(API_BASEROUTE, apiSubroute, body).then((response) => {
                   if (response.ok) { // success
                     alert('Post successful!');
@@ -94,7 +94,7 @@ export default class TopicCreateScreen extends React.Component {
     const offsetAdd = 44;
     const offset = Platform.OS === 'ios'
       ? Header.HEIGHT + offsetAdd
-      : Header.HEIGHT + (marginSize * 2 + StatusBar.currentHeight) * this.state.keyboardShowing;
+      : Header.HEIGHT + (marginSize * 2 + StatusBar.currentHeight) * !this.state.keyboardShowing;
     return (
 
       <View style={{ flex: 1, margin: marginSize }}>

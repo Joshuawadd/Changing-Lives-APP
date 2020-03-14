@@ -69,18 +69,16 @@ export default class ButtonList extends React.Component {
               ? <TouchableOpacity
                 style={[styles.button, this.props.style?.button, { backgroundColor: colors.ltGrey }]}
                 delayPressIn={50}
+                onLongPress={() => this.props.onLongPress(item)}
                 onPress={() => this.props.onPress(item)}
               >
-                <Image
-                  source={require('../assets/fb.png')}
-                  style={{ height: 50, width: 50 }} />
-                {/* <ButtonImage imageSource={'../assets/pdf.png'}></ButtonImage> */}
                 <Text numberOfLines={1} style={[styles.buttonText, this.props.style?.titleText]}>{item[this.titleKey]}</Text>
                 <Subtitle numberOfLines={1} style={this.props.style?.subtitleText} text={item[this.subtitleKey]}></Subtitle>
               </TouchableOpacity>
               : <TouchableOpacity
                 delayPressIn={50}
                 style={[styles.button, this.props.style?.button]}
+                onLongPress={() => this.props.onLongPress(item)}
                 onPress={() => this.props.onPress(item)}
               >
                 <View flexDirection='row'>

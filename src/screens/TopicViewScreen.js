@@ -205,10 +205,51 @@ export default class TopicViewScreen extends React.Component {
             data={this.state.childInfo}
             renderItem={({ item }) => (
               <View style={{ marginTop: 5, marginBottom: 5 }}>
-                <View style={[{ padding: 10 }, roles[item.childRole]]}>
+                <TouchableOpacity
+                  style={[{ padding: 10 }, roles[item.childRole]]}
+                  onLongPress={() => {
+                    if (item.childRole === 'parent') { return; }
+                    // const isAdmin = false //placeholder
+                    retrieveData('userName').then((userName) => {
+                      retrieveData('isAdmin').then((isAdmin) => {
+                        if ((JSON.parse(isAdmin) === 1) || (item.username === userName)) {
+                          Alert.alert(
+                            'Delete Message',
+                            'Do you really want to delete this message?',
+                            [
+                              {
+                                text: 'No',
+                                onPress: () => {
+
+                                }
+                              },
+                              {
+                                text: 'Yes',
+                                onPress: () => {
+                                  retrieveData('authToken').then((authToken) => {
+                                    console.log(item.child_comment);
+                                    var apiSubroute = '/api/forums/child/remove';
+                                    var body = `childId=${item.child_id}`;
+                                    genericPost(API_BASEROUTE, apiSubroute, body).then((response) => {
+                                      if (response.ok) { // success
+                                        alert('Post successfully deleted!');
+                                        this.getData();
+                                      }
+                                    });
+                                  });
+                                }
+                              }
+                            ],
+                            { cancelable: true }
+                          );
+                        }
+                      });
+                    });
+                  }}
+                >
                   <Text style={styles.topicPostUsername}>{usernames(item.childRole, item.username)}:</Text>
                   <Text style={styles.topicPostText}>{item.child_comment}</Text>
-                </View>
+                </TouchableOpacity>
                 <View style={{ flex: 0.1 }} />
               </View>
             )}
