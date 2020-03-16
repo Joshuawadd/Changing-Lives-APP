@@ -7,7 +7,6 @@ import styles from '../styles';
 import { SearchBar } from 'react-native-elements';
 import colors from '../colors.js';
 
-
 export default class ForumScreen extends React.Component {
   constructor (props) {
     super(props);
@@ -78,15 +77,15 @@ export default class ForumScreen extends React.Component {
       <View style={styles.container}>
         <View style={{ width: '100%' }}>
           <SearchBar
-          platform = "default"
-          placeholder="Search posts..."
-          onChangeText={this.updateSearch}
-          value={search}
-          containerStyle = {{backgroundColor: colors.mdGrey}}
-          inputContainerStyle = {{backgroundColor: colors.ltGrey}}
-          inputStyle = {{fontFamily: 'Geogtq-Md'}}
-        />
-      </View>
+            platform = "default"
+            placeholder="Search posts..."
+            onChangeText={this.updateSearch}
+            value={search}
+            containerStyle = {{ backgroundColor: colors.mdGrey }}
+            inputContainerStyle = {{ backgroundColor: colors.ltGrey }}
+            inputStyle = {{ fontFamily: 'Geogtq-Md' }}
+          />
+        </View>
         <Text style={[styles.infoText, {}]}>Select a post to view or make replies.</Text>
         <ButtonList
           style={{
