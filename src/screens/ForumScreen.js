@@ -20,6 +20,7 @@ export default class ForumScreen extends React.Component {
 
   updateSearch = search => {
     this.setState({ search });
+    this.getData();
   };
 
   static navigationOptions = ({ navigation }) => ({
@@ -38,7 +39,7 @@ export default class ForumScreen extends React.Component {
   getData () {
     retrieveData('authToken').then((authToken) => {
       var apiSubroute = '/api/forums/parent/list';
-      var apiQuery = `?token=${authToken}`;
+      var apiQuery = `?token=${authToken}&search=${this.state.search}`;
       genericGet(API_BASEROUTE, apiSubroute, apiQuery).then((response) => {
         if (response.ok) {
           this.setState({ dataList: response.content, isLoading: false });
@@ -78,8 +79,7 @@ export default class ForumScreen extends React.Component {
         <View style={{ width: '100%' }}>
           <SearchBar
           platform = "default"
-          lightTheme = {true}
-          placeholder="Type Here..."
+          placeholder="Search posts..."
           onChangeText={this.updateSearch}
           value={search}
           containerStyle = {{backgroundColor: colors.mdGrey}}
