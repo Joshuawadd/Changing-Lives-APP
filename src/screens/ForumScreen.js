@@ -4,15 +4,23 @@ import { genericGet, genericPost, retrieveData } from '../utils.js';
 import { API_BASEROUTE } from 'react-native-dotenv';
 import ButtonList from '../components/ButtonList';
 import styles from '../styles';
+import { SearchBar } from 'react-native-elements';
+import colors from '../colors.js';
+
 
 export default class ForumScreen extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
       isLoading: true,
+      search: '',
       refreshing: false
     };
   }
+
+  updateSearch = search => {
+    this.setState({ search });
+  };
 
   static navigationOptions = ({ navigation }) => ({
     title: 'Forum',
@@ -63,9 +71,22 @@ export default class ForumScreen extends React.Component {
         </View>
       );
     }
+    const { search } = this.state;
 
     return (
       <View style={styles.container}>
+        <View style={{ width: '100%' }}>
+          <SearchBar
+          platform = "default"
+          lightTheme = {true}
+          placeholder="Type Here..."
+          onChangeText={this.updateSearch}
+          value={search}
+          containerStyle = {{backgroundColor: colors.mdGrey}}
+          inputContainerStyle = {{backgroundColor: colors.ltGrey}}
+          inputStyle = {{fontFamily: 'Geogtq-Md'}}
+        />
+      </View>
         <Text style={[styles.infoText, {}]}>Select a post to view or make replies.</Text>
         <ButtonList
           style={{
