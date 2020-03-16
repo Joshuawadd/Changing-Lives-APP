@@ -26,8 +26,7 @@ export default class SectionsScreen extends React.Component {
         retrieveData('sectionData').then((sectionData) => {
           this.setState({
             isLoading: false,
-            dataSource: JSON.parse(sectionData),
-            showButtons: false
+            dataSource: JSON.parse(sectionData)
           });
         });
       } else {
@@ -39,8 +38,7 @@ export default class SectionsScreen extends React.Component {
               storeData('sectionData', JSON.stringify(response.content));
               this.setState({
                 isLoading: false,
-                dataSource: response.content,
-                showButtons: true
+                dataSource: response.content
               });
             } else {
               if (response.status === 403) {
@@ -64,8 +62,7 @@ export default class SectionsScreen extends React.Component {
                           this.setState({
                             offlineModeEnabled: true,
                             isLoading: false,
-                            dataSource: JSON.parse(sectionData),
-                            showButtons: false
+                            dataSource: JSON.parse(sectionData)
                           }, function () { });
                         });
                       }
@@ -98,7 +95,6 @@ export default class SectionsScreen extends React.Component {
       );
     }
 
-    const showButtons = this.state.showButtons;
     return (
       <View style={styles.container}>
         <Text style={styles.infoText}>Select a section to view its resources.</Text>
@@ -106,7 +102,7 @@ export default class SectionsScreen extends React.Component {
           data={this.state.dataSource}
           onPress={(item) => {
             console.log(item);
-            this.props.navigation.navigate('Files', { item, showButtons });
+            this.props.navigation.navigate('Files', { item });
           }}
           titleKey="name"
           refreshControl={
