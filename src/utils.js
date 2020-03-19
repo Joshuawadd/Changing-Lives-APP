@@ -9,25 +9,28 @@ const retrieveData = async (key) => {
   return value;
 };
 
-function genericGet (baseroute, subroute, query = '', silent = false) {
+const genericGet = (baseroute, subroute, query = '', silent = false) => {
   const fetchArgs = {
     method: 'GET'
   };
   return genericRequest(fetchArgs, baseroute, subroute, query, silent);
-}
+};
 
-function genericPost (baseroute, subroute, body = '', silent = false) {
-  const fetchArgs = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    },
-    body: body
-  };
-  return genericRequest(fetchArgs, baseroute, subroute, '', silent);
-}
+const genericPost = (baseroute, subroute, body = '', silent = false) => {
+  return retrieveData('authToken').then((authToken) => {
+    const fetchArgs = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        Authorization: authToken
+      },
+      body: body
+    };
+    return genericRequest(fetchArgs, baseroute, subroute, '', silent);
+  });
+};
 
-function genericRequest (fetchArgs, baseroute, subroute, query = '', silent) {
+const genericRequest = (fetchArgs, baseroute, subroute, query = '', silent) => {
   // controller is used to abort as a timeout
   // eslint-disable-next-line no-undef
   const controller = new AbortController();
@@ -84,6 +87,6 @@ function genericRequest (fetchArgs, baseroute, subroute, query = '', silent) {
       }
       return { content: errorText, status: errorInfo.status, ok: false };
     });
-}
+};
 
 module.exports = { genericGet, genericPost, storeData, retrieveData };

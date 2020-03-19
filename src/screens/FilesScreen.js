@@ -1,6 +1,6 @@
 import React from 'react';
-import { Text, View } from 'react-native';
-import { retrieveData } from '../utils';
+import { RefreshControl, Text, View, ActivityIndicator } from 'react-native';
+import { genericGet, storeData, retrieveData } from '../utils';
 import { Linking } from 'expo';
 import { API_BASEROUTE } from 'react-native-dotenv';
 import ButtonList from '../components/ButtonList';
@@ -10,8 +10,10 @@ export default class FilesScreen extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
-      sectionInfo: this.props.navigation.state.params.item,
-      showButtons: this.props.navigation.state.params.showButtons
+      isLoading: true,
+      refreshing: false,
+      sectionId: this.props.navigation.state.params.item.id,
+      sectionInfo: this.props.navigation.state.params.item
     };
   }
 
@@ -21,17 +23,49 @@ export default class FilesScreen extends React.Component {
     headerTitleStyle: styles.headerTitle
   });
 
+  getData () {
+    retrieveData('offlineModeEnabled').then((offlineModeEnabled) => {
+      if (JSON.parse(offlineModeEnabled) === true) {
+        this.setState({ noFilesText: 'Go online to view files!', isLoading: false });
+      } else {
+        this.setState({ isLoading: true });
+        retrieveData('authToken').then((authToken) => {
+          var apiSubroute = '/api/sections/list';
+          var apiQuery = `?token=${authToken}&sectionId=${this.state.sectionId}`;
+          genericGet(API_BASEROUTE, apiSubroute, apiQuery).then((response) => {
+            if (response.ok) {
+              this.setState({ sectionInfo: response.content[0], isLoading: false });
+              if (this.state.sectionInfo.files.length === 0) {
+                this.setState({ noFilesText: 'This section has no files.' });
+              } else {
+                delete this.state.noFilesText;
+              }
+            } else {
+              this.props.navigation.goBack();
+            }
+          });
+        });
+      }
+    });
+  }
+
   componentDidMount () {
-    if (!this.state.showButtons) {
-      this.setState({ noFilesText: 'Go online to see files!' });
-    } else if (this.state.sectionInfo.files.length === 0) {
-      this.setState({ noFilesText: 'This section has no files.' });
-    } else {
-      delete this.state.noFilesText;
-    }
+    this.getData();
+  }
+
+  _onRefresh = () => {
+    this.getData(); // refresh
   }
 
   render () {
+    if (this.state.isLoading) {
+      return (
+        <View style={{ flex: 1, padding: 20 }}>
+          <ActivityIndicator />
+        </View>
+      );
+    }
+
     if (typeof (this.state.noFilesText) === 'undefined') {
       return (
         <View style={styles.container}>
@@ -51,6 +85,13 @@ export default class FilesScreen extends React.Component {
                   Linking.openURL(`${API_BASEROUTE}/files/${item.path}?token=${authToken}`);
                 });
               }
+            }
+            refreshControl={
+              <RefreshControl
+                // refresh control used for the Pull to Refresh
+                refreshing={this.state.refreshing}
+                onRefresh={this._onRefresh}
+              />
             }
           />
         </View>

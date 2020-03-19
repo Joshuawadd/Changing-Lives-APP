@@ -75,58 +75,73 @@ export default class LoginScreen extends React.Component {
             data={[
               {
                 title: this.state.loginButtonText,
-                target: 'Login'
-              }
-            ]}
-            onPress={async () => {
-              this.setState({ loginButtonText: 'Logging in...' });
-              const apiSubroute = '/api/users/login';
-              const uname = this.state.username;
-              const pass = this.state.password;
-              const body = `userName=${uname}&userPassword=${pass}`;
-              const postResponse = await genericPost(API_BASEROUTE, apiSubroute, body, true);
-              if (postResponse.ok) {
-                storeData('authToken', postResponse.content.token);
-                storeData('userId', postResponse.content.id.toString());
-                // this.props.navigation.navigate('Home');
-                this.props.navigation.goBack();
-              } else {
-                this.setState({ loginButtonText: 'Login' });
-                if (postResponse.status === -1) {
-                  Alert.alert(
-                    'Error',
-                    postResponse.content,
-                    [
-                      {
-                        text: 'Continue offline',
-                        // onPress: () => console.log('Cancel Pressed'),
-                        style: 'cancel',
-                        onPress: () => {
-                          storeData('offlineModeEnabled', JSON.stringify(true));
-                          this.props.navigation.goBack();
-                        }
-                      },
-                      {
-                        text: 'Retry',
-                        onPress: () => { this.setState({ loginButtonText: 'Login' }); }
-                      }
-                    ],
-                    { cancelable: false }
-                  );
-                } else {
-                  Alert.alert(
-                    'Error',
-                    postResponse.content,
-                    [
-                      {
-                        text: 'Retry'
-                      }
-                    ],
-                    { cancelable: false }
-                  );
+                target: 'Login',
+                onPress: async () => {
+                  this.setState({ loginButtonText: 'Logging in...' });
+                  const apiSubroute = '/api/users/login';
+                  const uname = this.state.username;
+                  const pass = this.state.password;
+                  const body = `userName=${uname}&userPassword=${pass}`;
+                  const postResponse = await genericPost(API_BASEROUTE, apiSubroute, body, true);
+                  console.log(postResponse);
+                  if (postResponse.ok) {
+                    storeData('authToken', postResponse.content.token);
+                    storeData('userId', postResponse.content.id.toString());
+                    storeData('userName', uname);
+                    storeData('isAdmin', postResponse.content.isAdmin.toString());
+                    if (postResponse.content.forceReset === 1) {
+                      // password reset code here
+                      alert('Reset your password!');
+                    }
+                    this.props.navigation.goBack();
+                  } else {
+                    this.setState({ loginButtonText: 'Login' });
+                    if (postResponse.status === -1) {
+                      Alert.alert(
+                        'Error',
+                        postResponse.content,
+                        [
+                          {
+                            text: 'Continue offline',
+                            // onPress: () => console.log('Cancel Pressed'),
+                            style: 'cancel',
+                            onPress: () => {
+                              storeData('offlineModeEnabled', JSON.stringify(true));
+                              this.props.navigation.goBack();
+                            }
+                          },
+                          {
+                            text: 'Retry',
+                            onPress: () => { this.setState({ loginButtonText: 'Login' }); }
+                          }
+                        ],
+                        { cancelable: false }
+                      );
+                    } else {
+                      Alert.alert(
+                        'Error',
+                        postResponse.content,
+                        [
+                          {
+                            text: 'Retry'
+                          }
+                        ],
+                        { cancelable: false }
+                      );
+                    }
+                  }
+                }
+              },
+              {
+                title: 'Continue Offline',
+                target: 'Home',
+                onPress: () => {
+                  storeData('offlineModeEnabled', JSON.stringify(true));
+                  this.props.navigation.goBack();
                 }
               }
-            }}
+            ]}
+            onPress={(item) => item.onPress()}
           />
         </View>
       </KeyboardAvoidingView>

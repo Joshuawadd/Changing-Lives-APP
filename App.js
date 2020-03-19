@@ -27,7 +27,7 @@ export default class App extends React.Component {
       );
     } else {
       return ( // otherwise, return activity indicator
-        <View style={{ flex: 1, paddingTop: StatusBar.currentHeight }}>
+        <View style={{ flex: 1, paddingTop: 64 }}>
           <ActivityIndicator />
         </View>
       );

@@ -1,11 +1,12 @@
 import React from 'react';
 import { Header, useHeaderHeight } from 'react-navigation-stack';
-import { Platform, ActivityIndicator, StatusBar, Text, View, StyleSheet, Alert, TextInput, TouchableOpacity, KeyboardAvoidingView, Keyboard } from 'react-native';
+import { Platform, ActivityIndicator, StatusBar, Text, View, StyleSheet, Alert, TextInput, TouchableOpacity, KeyboardAvoidingView, Keyboard, RefreshControl, ScrollView } from 'react-native';
 import styles from '../styles';
 import colors from '../colors';
 import { FlatList } from 'react-native-gesture-handler';
 import { retrieveData, genericPost, genericGet } from '../utils';
 import { API_BASEROUTE } from 'react-native-dotenv';
+import Constants from 'expo-constants';
 
 /* eslint-disable react-native/no-unused-styles */
 const roles = StyleSheet.create({
@@ -26,6 +27,12 @@ const roles = StyleSheet.create({
   }
 });
 /* eslint-enable react-native/no-unused-styles */
+
+function wait (timeout) {
+  return new Promise(resolve => {
+    setTimeout(resolve, timeout);
+  });
+}
 
 const usernames = (role, suppliedUser) => {
   var username;
@@ -73,7 +80,8 @@ export default class TopicViewScreen extends React.Component {
       childComment: '',
       isLoading: true,
       keyboardShowing: false,
-      willScroll: false
+      willScroll: false,
+      refreshing: false
     };
   }
 
@@ -162,6 +170,10 @@ export default class TopicViewScreen extends React.Component {
     }
   }
 
+  _onRefresh = () => {
+    this.getData(); // refresh
+  }
+
   render () {
     if (this.state.isLoading) {
       return (
@@ -193,10 +205,51 @@ export default class TopicViewScreen extends React.Component {
             data={this.state.childInfo}
             renderItem={({ item }) => (
               <View style={{ marginTop: 5, marginBottom: 5 }}>
-                <View style={[{ padding: 10 }, roles[item.childRole]]}>
+                <TouchableOpacity
+                  style={[{ padding: 10 }, roles[item.childRole]]}
+                  onLongPress={() => {
+                    if (item.childRole === 'parent') { return; }
+                    // const isAdmin = false //placeholder
+                    retrieveData('userName').then((userName) => {
+                      retrieveData('isAdmin').then((isAdmin) => {
+                        if ((JSON.parse(isAdmin) === 1) || (item.username === userName)) {
+                          Alert.alert(
+                            'Delete Message',
+                            'Do you really want to delete this message?',
+                            [
+                              {
+                                text: 'No',
+                                onPress: () => {
+
+                                }
+                              },
+                              {
+                                text: 'Yes',
+                                onPress: () => {
+                                  retrieveData('authToken').then((authToken) => {
+                                    console.log(item.child_comment);
+                                    var apiSubroute = '/api/forums/child/remove';
+                                    var body = `childId=${item.child_id}`;
+                                    genericPost(API_BASEROUTE, apiSubroute, body).then((response) => {
+                                      if (response.ok) { // success
+                                        alert('Post successfully deleted!');
+                                        this.getData();
+                                      }
+                                    });
+                                  });
+                                }
+                              }
+                            ],
+                            { cancelable: true }
+                          );
+                        }
+                      });
+                    });
+                  }}
+                >
                   <Text style={styles.topicPostUsername}>{usernames(item.childRole, item.username)}:</Text>
                   <Text style={styles.topicPostText}>{item.child_comment}</Text>
-                </View>
+                </TouchableOpacity>
                 <View style={{ flex: 0.1 }} />
               </View>
             )}
@@ -214,6 +267,13 @@ export default class TopicViewScreen extends React.Component {
                 this.setState({ willScroll: false });
               }
             }}
+            refreshControl={
+              <RefreshControl
+                // refresh control used for the Pull to Refresh
+                refreshing={this.state.refreshing}
+                onRefresh={this._onRefresh}
+              />
+            }
           />
 
           <View style={{ height: 40, flexDirection: 'row' }}>
