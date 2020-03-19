@@ -30,7 +30,7 @@ const AppNavigator = createStackNavigator(
     // ButtonListTest,
   },
   {
-    initialRouteName: 'PasswordChange'
+    initialRouteName: 'Home'
   }
 );
 

@@ -58,6 +58,10 @@ export default class SettingsScreen extends React.Component {
             <Text style={styles.buttonText}>{this.state.logOutText}</Text>
           </TouchableOpacity>
 
+          <TouchableOpacity style={styles.button} onPress={this.props.navigation.navigate('PasswordChange')}>
+            <Text style={styles.buttonText}>Change Password</Text>
+          </TouchableOpacity>
+
           {/*
           <TouchableOpacity style={styles.button} onPress={this.clearAsyncStorage}>
             <Text style={styles.buttonText}>CLEAR APP STORAGE (!)</Text>
