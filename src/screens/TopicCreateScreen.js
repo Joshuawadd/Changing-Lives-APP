@@ -46,7 +46,6 @@ export default class TopicCreateScreen extends React.Component {
         [
           {
             text: 'No',
-            // onPress: () => console.log('Cancel Pressed'),
             style: 'cancel'
           },
           {

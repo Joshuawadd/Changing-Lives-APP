@@ -34,40 +34,9 @@ export default class HomeScreen extends React.Component {
           this.setState({ isLoading: false });
         } else {
           this.setState({ isLoading: true });
-          retrieveData('authToken').then((authToken) => {
-            var apiSubroute = '/api/users/login/silent';
-            var apiQuery = `?token=${authToken}`;
-            genericGet(API_BASEROUTE, apiSubroute, apiQuery, true).then((response) => {
-              if (response.ok) {
-                this.setState({ isLoading: false });
-              } else {
-                if (response.status === 403) {
-                  this.props.navigation.navigate('Login');
-                } else {
-                  Alert.alert(
-                    'Error',
-                    response.content,
-                    [
-                      {
-                        text: 'Continue offline',
-                        // onPress: () => console.log('Cancel Pressed'),
-                        style: 'cancel',
-                        onPress: () => {
-                          storeData('offlineModeEnabled', JSON.stringify(true));
-                          this.setState({ offlineModeEnabled: true });
-                          this.setState({ isLoading: false });
-                        }
-                      },
-                      {
-                        text: 'Retry',
-                        onPress: () => { this.props.navigation.navigate('Login'); }
-                      }
-                    ],
-                    { cancelable: false }
-                  );
-                }
-              }
-            });
+          var apiSubroute = '/api/users/login/silent';
+          genericGet.apply(this, [API_BASEROUTE, apiSubroute, '', true]).then((response) => {
+            this.setState({ isLoading: false });
           });
         }
       });
