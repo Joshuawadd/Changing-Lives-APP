@@ -101,7 +101,7 @@ export default class LoginScreen extends React.Component {
                         postResponse.content,
                         [
                           {
-                            text: 'Continue offline',
+                            text: 'Continue Offline',
                             style: 'cancel',
                             onPress: () => {
                               storeData('offlineModeEnabled', JSON.stringify(true));
@@ -109,7 +109,7 @@ export default class LoginScreen extends React.Component {
                             }
                           },
                           {
-                            text: 'Retry',
+                            text: 'Retry Login',
                             onPress: () => { this.setState({ loginButtonText: 'Login' }); }
                           }
                         ],
