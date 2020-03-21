@@ -4,7 +4,7 @@ import { Platform, ActivityIndicator, StatusBar, Text, View, StyleSheet, Alert, 
 import styles from '../styles';
 import colors from '../colors';
 import { FlatList } from 'react-native-gesture-handler';
-import { retrieveData, genericPost, genericGet } from '../utils';
+import { resetAndNavigate, retrieveData, genericPost, genericGet } from '../utils';
 import { API_BASEROUTE } from 'react-native-dotenv';
 import Constants from 'expo-constants';
 
@@ -87,10 +87,10 @@ export default class TopicViewScreen extends React.Component {
 
   getData () {
     const parentId = this.state.parentInfo.parent_id;
-    retrieveData('authToken').then((authToken) => {
-      var apiSubroute = '/api/forums/child/list';
-      var apiQuery = `?token=${authToken}&parentId=${parentId}`;
-      genericGet(API_BASEROUTE, apiSubroute, apiQuery).then((response) => {
+    var apiSubroute = '/api/forums/child/list';
+    var apiQuery = `?parentId=${parentId}`;
+    genericGet.apply(this, [API_BASEROUTE, apiSubroute, apiQuery]).then((response) => {
+      if (response.ok) {
         var childInfo = response.content;
         if (this.state.scrollWithParent) {
           var parentAsChild = {
@@ -103,7 +103,9 @@ export default class TopicViewScreen extends React.Component {
           childInfo.unshift(parentAsChild);
         }
         this.setState({ childInfo: childInfo, isLoading: false });
-      });
+      } else if (response.action === 'continueOffline') {
+        resetAndNavigate(['Home']);
+      }
     });
   }
 
@@ -146,7 +148,6 @@ export default class TopicViewScreen extends React.Component {
         [
           {
             text: 'No',
-            // onPress: () => console.log('Cancel Pressed'),
             style: 'cancel'
           },
           {
@@ -227,7 +228,6 @@ export default class TopicViewScreen extends React.Component {
                                 text: 'Yes',
                                 onPress: () => {
                                   retrieveData('authToken').then((authToken) => {
-                                    console.log(item.child_comment);
                                     var apiSubroute = '/api/forums/child/remove';
                                     var body = `childId=${item.child_id}`;
                                     genericPost(API_BASEROUTE, apiSubroute, body).then((response) => {

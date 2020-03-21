@@ -10,8 +10,8 @@ export default class LoginScreen extends React.Component {
     super(props);
     this.state = {
       keyboardShowing: false,
-      username: '',
-      password: '',
+      username: 'clstaff',
+      password: 'admin20',
       loginButtonText: 'Login'
     };
   }
@@ -83,7 +83,6 @@ export default class LoginScreen extends React.Component {
                   const pass = this.state.password;
                   const body = `userName=${uname}&userPassword=${pass}`;
                   const postResponse = await genericPost(API_BASEROUTE, apiSubroute, body, true);
-                  console.log(postResponse);
                   if (postResponse.ok) {
                     storeData('authToken', postResponse.content.token);
                     storeData('userId', postResponse.content.id.toString());
@@ -102,8 +101,7 @@ export default class LoginScreen extends React.Component {
                         postResponse.content,
                         [
                           {
-                            text: 'Continue offline',
-                            // onPress: () => console.log('Cancel Pressed'),
+                            text: 'Continue Offline',
                             style: 'cancel',
                             onPress: () => {
                               storeData('offlineModeEnabled', JSON.stringify(true));
@@ -111,7 +109,7 @@ export default class LoginScreen extends React.Component {
                             }
                           },
                           {
-                            text: 'Retry',
+                            text: 'Retry Login',
                             onPress: () => { this.setState({ loginButtonText: 'Login' }); }
                           }
                         ],

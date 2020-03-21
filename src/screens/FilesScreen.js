@@ -1,6 +1,6 @@
 import React from 'react';
 import { RefreshControl, Text, View, ActivityIndicator } from 'react-native';
-import { genericGet, storeData, retrieveData } from '../utils';
+import { genericGet, storeData, retrieveData, resetAndNavigate } from '../utils';
 import { Linking } from 'expo';
 import { API_BASEROUTE } from 'react-native-dotenv';
 import ButtonList from '../components/ButtonList';
@@ -24,27 +24,26 @@ export default class FilesScreen extends React.Component {
   });
 
   getData () {
-    retrieveData('offlineModeEnabled').then((offlineModeEnabled) => {
+    retrieveData('offlineModeEnabled').then(async (offlineModeEnabled) => {
       if (JSON.parse(offlineModeEnabled) === true) {
         this.setState({ noFilesText: 'Go online to view files!', isLoading: false });
       } else {
         this.setState({ isLoading: true });
-        retrieveData('authToken').then((authToken) => {
-          var apiSubroute = '/api/sections/list';
-          var apiQuery = `?token=${authToken}&sectionId=${this.state.sectionId}`;
-          genericGet(API_BASEROUTE, apiSubroute, apiQuery).then((response) => {
-            if (response.ok) {
-              this.setState({ sectionInfo: response.content[0], isLoading: false });
-              if (this.state.sectionInfo.files.length === 0) {
-                this.setState({ noFilesText: 'This section has no files.' });
-              } else {
-                delete this.state.noFilesText;
-              }
-            } else {
-              this.props.navigation.goBack();
-            }
-          });
-        });
+        var apiSubroute = '/api/sections/list';
+        var apiQuery = `?sectionId=${this.state.sectionId}`;
+        const response = await genericGet.apply(this, [API_BASEROUTE, apiSubroute, apiQuery]);
+        if (response.ok) {
+          this.setState({ sectionInfo: response.content[0], isLoading: false });
+          if (this.state.sectionInfo.files.length === 0) {
+            this.setState({ noFilesText: 'This section has no files.' });
+          } else {
+            delete this.state.noFilesText;
+          }
+        } else {
+          if (response.action === 'continueOffline') {
+            this.setState({ noFilesText: 'Go online to view files!', isLoading: false });
+          }
+        }
       }
     });
   }
