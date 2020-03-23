@@ -13,7 +13,8 @@ export default class ForumScreen extends React.Component {
     this.state = {
       isLoading: true,
       search: '',
-      refreshing: false
+      refreshing: false,
+      dataList: []
     };
   }
 
@@ -42,9 +43,9 @@ export default class ForumScreen extends React.Component {
       if (response.ok) {
         this.setState({ dataList: response.content, isLoading: false });
         if (this.state.dataList.length === 0) {
-          this.setState({ emptyText: 'No resources uploaded yet' });
+          this.setState({ emptyText: 'No topics uploaded yet' });
         } else {
-          delete this.state.noFilesText;
+          delete this.state.emptyText;
         }
       } else if (response.action === 'continueOffline') {
         resetAndNavigate(['Home']);

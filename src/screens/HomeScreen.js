@@ -36,7 +36,9 @@ export default class HomeScreen extends React.Component {
           this.setState({ isLoading: true });
           var apiSubroute = '/api/users/login/silent';
           genericGet.apply(this, [API_BASEROUTE, apiSubroute, '', true]).then((response) => {
-            this.setState({ isLoading: false });
+            if (response.action !== 'retryLogin') {
+              this.setState({ isLoading: false });
+            }
           });
         }
       });
