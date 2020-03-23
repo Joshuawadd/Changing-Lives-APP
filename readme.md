@@ -1,3 +1,5 @@
+![test image](./documentation/test.png)
+
 # User Manual - Changing Lives App
 ## How to set up the development environment
 On your mobile device: 
