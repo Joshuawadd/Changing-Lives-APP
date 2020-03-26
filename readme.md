@@ -1,37 +1,4 @@
-![test image](./documentation/test.png)
-
 # User Manual - Changing Lives App
-## How to set up the development environment
-On your mobile device: 
-
-1. Download the Expo Android/iOS app at <https://expo.io/learn> to your test mobile device.
-
-On your development machine:
-
-2. Ensure the development machine is discoverable by other devices on the network (e.g. by setting the connection type to "Private" on Windows).
-3. Download and install Node.js at <https://nodejs.org/en/download/>.
-4. Globally install _expo-cli_ by running `npm install -g expo-cli`.
-5. Clone this repository onto your system and navigate to it.
-6. Run `npm install` to set up the node modules.
-7. In the _.env_ file, replace the `http://0.0.0.0:3000` after `API_BASEROUTE` with the IP or web address that the server is program running on. Every time this is changed, the cache must be cleared before testing. This is enabled by default; to disable it, change `"start": "expo start -c"` to `"start": "expo start"` in _package.json_. Note that it must be re-enabled every time the address is changed.
-
-At this point the app should be ready to test by running `npm start`. Run this command and follow the instructions in the terminal. If this crashes due to an invalid regular expression:
-
-8. In all instances of `metro-config/src/defaults/blacklist.js` within `node_modules` (some may be nested), change the line:
-
-    ```
-      /node_modules[/\\]react[/\\]dist[/\\].*/,
-    ```
-    to:
-    ```
-      /node_modules[\/\\]react[\/\\]dist[\/\\].*/,
-    ```
-    Alternatively, running the attached Python script should do this automatically.
-
-## How to build the application
-1. In the _.env_ file, replace the `http://0.0.0.0:3000` after `API_BASEROUTE` with the IP and port, or web address, that the server program is running on.
-2. Follow Expo's instructions at <https://docs.expo.io/versions/latest/distribution/building-standalone-apps/>, but before running `expo build`, you must open another terminal window in this directory and run `npm start`. It may be necessary to clear the cache beforehand (see step 7 of _How to set up the development environment_).
-
 
 ## Features of the application
 
@@ -54,3 +21,43 @@ At this point the app should be ready to test by running `npm start`. Run this c
   - **Enable/disable offline mode**. Toggle button. Forums will be inaccessible, resource text information will not be updated, resource links will not be shown.
 
   - **Logout**. This button will clear the authentication token, prompting the user to log in next time they visit the home screen (in online mode).
+
+<br/><br/><br/><br/><br/><br/><br/><br/><br/>
+## Technical Information
+### How to install the built .apk (Android)
+1. Download the application to your mobile device.
+2. Use a file manager on your mobile device to navigate to the download location.
+3. Click the downloaded .apk (the logo and name will reference Changing Lives) to begin the installation process.
+4. Complete the installation process as directed by your device.
+
+### How to set up the development environment
+On your mobile device: 
+
+1. Download the Expo Android/iOS app at <https://expo.io/learn> to your test mobile device.
+
+On your development machine:
+
+2. Ensure the development machine is discoverable by other devices on the network (e.g. by setting the connection type to "Private" on Windows).
+3. Download and install Node.js at <https://nodejs.org/en/download/>.
+4. Globally install _expo-cli_ by running `npm install -g expo-cli`.
+5. Clone this repository onto your system and navigate to it.
+6. Run `npm install` to set up the node modules.
+7. In the _.env_ file, replace the `http://0.0.0.0:3000` after `API_BASEROUTE` with the IP or web address that the server is program running on. Every time this is changed, the cache must be cleared before testing. This is enabled by default; to disable it, change `"start": "expo start -c"` to `"start": "expo start"` in _package.json_. Note that it must be re-enabled every time the address is changed.
+
+At this point the app should be ready to test by running `npm start`. Run this command and follow the instructions in the terminal. If this crashes due to an error referencing an "invalid regular expression", run the attached Python script. If this fails to resolve the issue:
+
+8. In all instances of `metro-config/src/defaults/blacklist.js` within `node_modules` (some may be nested), change the line:
+
+    ```
+      /node_modules[/\\]react[/\\]dist[/\\].*/,
+    ```
+    to:
+    ```
+      /node_modules[\/\\]react[\/\\]dist[\/\\].*/,
+    ```
+    
+
+### How to build the application
+1. In the _.env_ file, replace the `http://0.0.0.0:3000` after `API_BASEROUTE` with the IP and port, or web address, that the server program is running on.
+2. Follow Expo's instructions at <https://docs.expo.io/versions/latest/distribution/building-standalone-apps/>, but before running `expo build`, you must open another terminal window in this directory and run `npm start`. It may be necessary to clear the cache beforehand (see step 7 of _How to set up the development environment_).
+
