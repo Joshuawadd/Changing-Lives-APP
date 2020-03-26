@@ -28,6 +28,11 @@ export default class SectionsScreen extends React.Component {
             isLoading: false,
             dataSource: JSON.parse(sectionData)
           });
+          if (this.state.dataSource.length === 0) {
+            this.setState({ emptyText: 'No resources uploaded yet' });
+          } else {
+            delete this.state.noFilesText;
+          }
         });
       } else {
         var apiSubroute = '/api/sections/list';
@@ -38,6 +43,11 @@ export default class SectionsScreen extends React.Component {
               isLoading: false,
               dataSource: response.content
             });
+            if (this.state.dataSource.length === 0) {
+              this.setState({ emptyText: 'No resources uploaded yet' });
+            } else {
+              delete this.state.noFilesText;
+            }
           } else {
             if (response.action === 'continueOffline') {
               retrieveData('sectionData').then((sectionData) => {
@@ -46,16 +56,16 @@ export default class SectionsScreen extends React.Component {
                   isLoading: false,
                   dataSource: JSON.parse(sectionData)
                 });
+                if (this.state.dataSource.length === 0) {
+                  this.setState({ emptyText: 'No resources uploaded yet' });
+                } else {
+                  delete this.state.noFilesText;
+                }
               });
             }
           }
         });
       };
-      if (this.state.dataSource.length === 0) {
-        this.setState({ emptyText: 'No resources uploaded yet' });
-      } else {
-        delete this.state.noFilesText;
-      }
     });
   }
 

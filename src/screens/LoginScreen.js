@@ -10,8 +10,8 @@ export default class LoginScreen extends React.Component {
     super(props);
     this.state = {
       keyboardShowing: false,
-      username: 'clstaff',
-      password: 'admin20',
+      username: '',
+      password: '',
       loginButtonText: 'Login'
     };
   }
