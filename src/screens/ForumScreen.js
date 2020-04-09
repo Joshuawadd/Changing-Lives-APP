@@ -154,6 +154,17 @@ export default class ForumScreen extends React.Component {
     } else {
       return (
         <View style={styles.container}>
+          <View style={{ width: '100%' }}>
+            <SearchBar
+              platform="default"
+              placeholder="Search posts..."
+              onChangeText={this.updateSearch}
+              value={search}
+              containerStyle={{ backgroundColor: colors.mdGrey }}
+              inputContainerStyle={{ backgroundColor: colors.ltGrey }}
+              inputStyle={{ fontFamily: 'Geogtq-Md' }}
+            />
+          </View>
           <Text style={styles.infoText}>{this.state.emptyText}</Text>
         </View>
       );
