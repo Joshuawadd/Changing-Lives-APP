@@ -10,9 +10,9 @@
 
 - **View section**. This will show the most recent text information for the section accessed. In online mode, it will also show the list of resource links for that section. Clicking one of the links will open the resource in the phone's PDF viewer, which will usually have an option to save the file. Has link(s) to online PDF files.
 
-- **Forum**. This is a list of posted topics, ordered from most recent to least recent. Each will have the topic title and the first line of the topic comment shown. Has links to screens **View Topic** and **Create Topic**.
+- **Forum**. This is a list of posted topics, ordered from most recent to least recent. Each will have the topic title and the first line of the topic comment shown. A topic may be deleted by its creator or any staff member by long-pressing it. Has links to screens **View Topic** and **Create Topic**.
 
-- **View Topic**. Accessed by pressing any topic. The topic title, topic comment and any reply comments will be shown, and the user will have the option to submit a new comment. Replies will be formatted differently depending on the role of the person who made it: pink for staff, purple for non-staff topic creator, blue otherwise.
+- **View Topic**. Accessed by pressing any topic. The topic title, topic comment and any reply comments will be shown, and the user will have the option to submit a new comment. Replies will be formatted differently depending on the role of the person who made it: pink for staff, purple for non-staff topic creator, blue otherwise. A comment may be deleted by its creator or any staff member by long-pressing it.
 
 - **Create topic**. Accessed by pressing the button in the top right corner. The user may type a topic title and a topic comment, then press the button in the top right corner again to submit it.
 
