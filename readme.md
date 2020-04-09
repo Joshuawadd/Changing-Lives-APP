@@ -16,6 +16,12 @@
 
 - **Create topic**. Accessed by pressing the button in the top right corner. The user may type a topic title and a topic comment, then press the button in the top right corner again to submit it.
 
+- **Search topics**. A search bar at the top allows users to search the forums for certain topics. The search displays any posts with the searched term in the title.
+
+- **Delete topics**. A topic can be deleted by holding down on the topic button. An option will then appear to allow the user to confirm whether they want to delete the topic or not. Users may only delete topics they themselves have created, whereas staff may delete any topic.
+
+- **Delete comments**. Same functionality as the delete topics, holding down will give the users the option to delete.
+
 - **Settings**. Contains buttons for the following options:
 
   - **Enable/disable offline mode**. Toggle button. Forums will be inaccessible, resource text information will not be updated, resource links will not be shown.
