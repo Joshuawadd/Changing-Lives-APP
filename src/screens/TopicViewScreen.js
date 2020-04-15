@@ -155,7 +155,7 @@ export default class TopicViewScreen extends React.Component {
             onPress: () => {
               retrieveData('authToken').then((authToken) => {
                 var apiSubroute = '/api/forums/child/create';
-                var body = `token=${authToken}&parentId=${this.state.parentId}&childComment=${this.state.childComment}`;
+                var body = `&parentId=${this.state.parentId}&childComment=${this.state.childComment}`;
                 genericPost(API_BASEROUTE, apiSubroute, body).then((response) => {
                   if (response.ok) { // success
                     this.setState({ childComment: '', willScroll: true });
@@ -185,7 +185,7 @@ export default class TopicViewScreen extends React.Component {
     }
 
     const marginSize = 10;
-    const offsetAdd = 44;
+    const offsetAdd = 20;
     const offset = Platform.OS === 'ios'
       ? Header.HEIGHT + offsetAdd
       : Header.HEIGHT + (marginSize * 2 + StatusBar.currentHeight) * this.state.keyboardShowing;
@@ -197,9 +197,9 @@ export default class TopicViewScreen extends React.Component {
 
         <KeyboardAvoidingView
           // keyboardVerticalOffset={Header.HEIGHT + (marginSize * 2 + statusBarHeight) * !this.state.keyboardShowing}
-          keyboardVerticalOffset={offset}
+          // keyboardVerticalOffset={offset}
           style={{ flex: 1 }}
-          behavior="padding"
+          behavior={offset}
         >
 
           <FlatList
