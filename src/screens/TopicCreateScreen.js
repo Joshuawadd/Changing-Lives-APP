@@ -1,6 +1,6 @@
 import React from 'react';
 import { Header } from 'react-navigation-stack';
-import { Platform, StatusBar, Text, View, RightButton, Button, StyleSheet, KeyboardAvoidingView, Image, TextInput, TouchableOpacity, ScrollView, Keyboard, TouchableWithoutFeedback, Alert } from 'react-native';
+import { Dimensions, Platform, StatusBar, Text, View, RightButton, Button, StyleSheet, KeyboardAvoidingView, Image, TextInput, TouchableOpacity, ScrollView, Keyboard, TouchableWithoutFeedback, Alert } from 'react-native';
 import styles from '../styles';
 import { FlatList } from 'react-native-gesture-handler';
 import { API_BASEROUTE } from 'react-native-dotenv';
@@ -99,7 +99,7 @@ export default class TopicCreateScreen extends React.Component {
       <View style={{ flex: 1, margin: marginSize }}>
         <TextInput
           style={{
-            height: '10%',
+            height: Dimensions.get('window').height * 0.08,
             width: '100%',
             borderWidth: 1,
             padding: '2%',
@@ -115,7 +115,7 @@ export default class TopicCreateScreen extends React.Component {
         <KeyboardAvoidingView
           keyboardVerticalOffset={offset}
           style={{ flex: 1 }}
-          behavior="padding"
+          behavior={Platform.OS === 'ios' ? 'padding' : null}
 
         >
           <View style={styles.container}>
