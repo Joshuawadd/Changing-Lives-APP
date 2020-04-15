@@ -199,7 +199,7 @@ export default class TopicViewScreen extends React.Component {
           // keyboardVerticalOffset={Header.HEIGHT + (marginSize * 2 + statusBarHeight) * !this.state.keyboardShowing}
           keyboardVerticalOffset={offset}
           style={{ flex: 1 }}
-          behavior={Platform.OS === "ios" ? "padding" : null}
+          behavior={Platform.OS === 'ios' ? 'padding' : null}
         >
 
           <FlatList

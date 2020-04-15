@@ -115,7 +115,7 @@ export default class TopicCreateScreen extends React.Component {
         <KeyboardAvoidingView
           keyboardVerticalOffset={offset}
           style={{ flex: 1 }}
-          behavior={Platform.OS === "ios" ? "padding" : null}
+          behavior={Platform.OS === 'ios' ? 'padding' : null}
 
         >
           <View style={styles.container}>
