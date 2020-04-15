@@ -19,8 +19,7 @@ export default class ForumScreen extends React.Component {
   }
 
   updateSearch = search => {
-    this.setState({ search });
-    this.getData();
+    this.setState({ search }, this.getData);
   };
 
   static navigationOptions = ({ navigation }) => ({
@@ -37,6 +36,7 @@ export default class ForumScreen extends React.Component {
   });
 
   getData () {
+    console.log(`GETTING DATA: ${this.state.search}`)
     var apiSubroute = '/api/forums/parent/list';
     var apiQuery = `?search=${this.state.search}`;
     genericGet.apply(this, [API_BASEROUTE, apiSubroute, apiQuery]).then((response) => {
