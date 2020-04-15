@@ -19,8 +19,7 @@ export default class ForumScreen extends React.Component {
   }
 
   updateSearch = search => {
-    this.setState({ search });
-    this.getData();
+    this.setState({ search }, this.getData);
   };
 
   static navigationOptions = ({ navigation }) => ({
